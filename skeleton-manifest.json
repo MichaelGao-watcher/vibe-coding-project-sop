@@ -1,0 +1,158 @@
+{
+  "skeletonVersion": "1.2.0",
+  "name": "vibe-coding-project-sop",
+  "description": "AI 项目文档骨架 — 基础设施立刻建立，产出按阶段推进",
+  "protocol": {
+    "type": "layered-init",
+    "warning": "本骨架分为基础设施层和阶段产出层。禁止无脑全盘复制，必须按两层协议执行。"
+  },
+  "infrastructure": {
+    "description": "项目启动时立刻建立的通用机制文件，与项目所处阶段无关",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "action": "copy-and-fill",
+        "note": "从骨架模板复制，按项目填空（项目名、形态、技术栈、硬规则等）"
+      },
+      {
+        "path": "vibe-coding-sop.md",
+        "action": "copy-as-is",
+        "note": "五阶段工作流参考，直接复制，不修改"
+      },
+      {
+        "path": "status.md",
+        "action": "copy-template",
+        "note": "保留骨架中的模板结构，后续按项目实际情况填充"
+      },
+      {
+        "path": "session-log.md",
+        "action": "copy-template",
+        "note": "保留骨架中的模板结构，每次会话结束后追加"
+      },
+      {
+        "path": "decisions.md",
+        "action": "copy-template",
+        "note": "保留骨架中的模板结构，有关键决策时追加 ADR"
+      },
+      {
+        "path": "troubleshooting.md",
+        "action": "copy-template",
+        "note": "保留骨架中的模板结构，遇到问题时追加"
+      },
+      {
+        "path": "lessons-learned.md",
+        "action": "copy-template",
+        "note": "保留骨架中的空表格，发现可复用经验时追加"
+      }
+    ],
+    "rationale": "这些文件从项目第一天就需要存在。阶段一确认需求时就会有关键决策、可能遇到环境问题、可能发现可复用方法。没有它们，过程记录会丢失。"
+  },
+  "phases": [
+    {
+      "id": "phase-01",
+      "name": "需求讨论",
+      "entryCondition": "纯新项目（只有想法，无代码无文档）",
+      "inputs": ["用户的原始想法、业务场景、目标用户画像"],
+      "outputs": ["docs/proposal.md"],
+      "skeletonFilesToCopy": [],
+      "notes": "产出由 AI 与用户讨论后动态生成，骨架中无对应模板"
+    },
+    {
+      "id": "phase-02",
+      "name": "设计文档搭建",
+      "entryCondition": "有需求文档（已有 PRD/需求说明，或 phase-01 已完成）",
+      "inputs": ["docs/proposal.md"],
+      "outputs": ["docs/design.md", "docs/brief.md"],
+      "skeletonFilesToCopy": [],
+      "notes": "产出由 AI 基于 proposal.md 动态生成，骨架中无对应模板"
+    },
+    {
+      "id": "phase-03",
+      "name": "划分任务",
+      "entryCondition": "有设计文档（已有架构/接口设计，或 phase-02 已完成）",
+      "inputs": ["docs/proposal.md", "docs/design.md", "docs/brief.md"],
+      "outputs": ["docs/tasks/task-{module}.md", "docs/tasks/task-progress.md"],
+      "skeletonFilesToCopy": [],
+      "notes": "任务文件由 AI 基于设计文档动态生成，骨架中无对应模板"
+    },
+    {
+      "id": "phase-04",
+      "name": "生成 SubAgent Prompt",
+      "entryCondition": "有完整任务拆分（phase-03 已完成）",
+      "inputs": ["docs/proposal.md", "docs/design.md", "docs/brief.md", "docs/tasks/*.md"],
+      "outputs": ["prompt.md"],
+      "skeletonFilesToCopy": [],
+      "notes": "prompt.md 由 AI 基于前文所有文档动态生成"
+    },
+    {
+      "id": "phase-05",
+      "name": "执行开发",
+      "entryCondition": "有 Prompt（phase-04 已完成）或半成品项目（已有代码）",
+      "inputs": ["prompt.md", "docs/tasks/task-progress.md", "docs/design.md", "docs/tasks/*.md"],
+      "outputs": ["src/", "tests/", "各模块源码 + 测试 + 集成"],
+      "skeletonFilesToCopy": [],
+      "notes": "开发阶段由 subAgent 接力执行，骨架本身不提供代码模板"
+    }
+  ],
+  "optionalOutputs": [
+    {
+      "phaseId": "phase-02",
+      "path": "docs/database.md",
+      "trigger": "proposal.md 中 T-01 '是否需要数据持久化存储' 答案为 ② 或 ③",
+      "description": "数据库/持久化方案设计文档"
+    },
+    {
+      "phaseId": "phase-02",
+      "path": "design.md#interface-contract",
+      "trigger": "proposal.md 中 T-02 '是否需要对外提供 API' 答案为 ② 或 ③",
+      "description": "design.md 中的接口契约章节"
+    },
+    {
+      "phaseId": "phase-02",
+      "path": "design.md#security",
+      "trigger": "proposal.md 中 T-04 '是否有用户认证/权限体系' 答案为 ② 或 ③",
+      "description": "design.md 中的安全设计章节"
+    },
+    {
+      "phaseId": "phase-04",
+      "path": "deploy.md",
+      "trigger": "proposal.md 中 T-03 '是否需要独立部署' 答案为 ② 或 ③",
+      "description": "部署架构、环境配置、CI/CD 流程"
+    }
+  ],
+  "recovery": {
+    "description": "用于修复/纠偏已有项目",
+    "procedure": [
+      "先补充建立缺失的基础设施文件（status.md、session-log.md 等）",
+      "读取现有文件，评估项目当前状态",
+      "对照 phases 定义，判断当前应处于哪个阶段",
+      "如已有代码但文档不全 → 从 phase-05 开始，先评估代码再决定回溯",
+      "如架构混乱/缺设计 → 回溯 phase-02，补 docs/design.md",
+      "如模块边界不清 → 回溯 phase-03，重新拆分任务"
+    ]
+  },
+  "consumerInstructions": {
+    "forLLMAgents": "先按 infrastructure 建立7个基础设施文件，再读取 vibe-coding-sop.md 的「项目起点判断」确定切入阶段。阶段二开始前读取 proposal.md 的技术需求确认（T-01~T-04），根据触发条件决定是否生成 optionalOutputs 中的文件。",
+    "forCLIPrograms": "Step 1: 复制 infrastructure.files。Step 2: 解析 phases 确定切入阶段。Step 3: 执行阶段一时确保产出 proposal.md 并包含技术需求确认。Step 4: 阶段二开始前检查 proposal.md 中的 T-01~T-04，匹配 optionalOutputs 的 trigger 条件，决定是否额外生成对应文件。",
+    "forHumans": "参考 README.md 的「快速开始」章节：先初始化基础设施，再判断项目状态，最后按 SOP 阶段推进。阶段一会确认是否需要数据库/API/部署/安全等设计，后续阶段按需生成。"
+  },
+  "fileTreeConvention": {
+    "_infrastructure": "以下文件项目启动即创建，与阶段无关",
+    "AGENTS.md": "项目级硬规则（从骨架模板填空）",
+    "vibe-coding-sop.md": "五阶段工作流参考（直接从骨架复制，不修改）",
+    "status.md": "当前进度/待办（从骨架模板初始化）",
+    "session-log.md": "会话历史（从骨架模板初始化，后续追加）",
+    "decisions.md": "关键决策记录（从骨架模板初始化，后续追加）",
+    "troubleshooting.md": "问题索引（从骨架模板初始化，后续追加）",
+    "lessons-learned.md": "跨项目经验（从骨架模板初始化，后续追加）",
+    "_phased_outputs": "以下文件按五阶段逐步生成",
+    "docs/proposal.md": "phase-01 产出",
+    "docs/design.md": "phase-02 产出",
+    "docs/brief.md": "phase-02 产出（决策摘要，不可变更的决策边界）",
+    "docs/tasks/task-{module}.md": "phase-03 产出",
+    "docs/tasks/task-progress.md": "phase-03 产出（总进度看板）",
+    "prompt.md": "phase-04 产出（主控指令）",
+    "src/": "phase-05 产出（源码）",
+    "skeleton-manifest.json": "本文件（骨架元数据，供机器读取）"
+  }
+}
