@@ -35,13 +35,13 @@
 
 ### 记录时机
 
-**每次会话结束后**，与 `status.md`、`session-log.md` 同步更新：
+**用户说「存储」时**，与 `status.md`、`session-log.md` 同步评估更新：
 
 ```
-代码提交/测试通过 → 更新 status.md → 追加 session-log.md → 【评估本轮是否有值得记入 lessons-learned.md 的经验】
+用户说「存储」→ AI 回顾本轮内容 → 更新 status.md → 追加 session-log.md → 【评估本轮是否有值得记入 lessons-learned.md 的经验】
 ```
 
-评估方式：快速回顾本轮 `session-log.md`，检查是否有符合「触发标准」的经验。有则提炼写入本文件；没有则跳过。
+评估方式：AI 回顾本轮会话内容，检查是否有符合「触发标准」的经验。有则提炼写入本文件；没有则跳过。
 
 ### 谁来记录
 
