@@ -11,38 +11,45 @@
     "files": [
       {
         "path": "AGENTS.md",
+        "source": "骨架根目录",
         "action": "copy-and-fill",
-        "note": "从骨架模板复制，按项目填空（项目名、形态、技术栈、硬规则等）"
+        "note": "从骨架根目录复制，按项目填空（项目名、形态、技术栈、硬规则等）"
       },
       {
         "path": "vibe-coding-sop.md",
+        "source": "templates/vibe-coding-sop.md",
         "action": "copy-as-is",
-        "note": "五阶段工作流参考，直接复制，不修改"
+        "note": "五阶段工作流参考，从 templates/ 直接复制到项目根目录，不修改"
       },
       {
         "path": "status.md",
+        "source": "templates/status.md",
         "action": "copy-template",
-        "note": "保留骨架中的模板结构，后续按项目实际情况填充"
+        "note": "保留骨架中的模板结构，复制到项目根目录，后续按项目实际情况填充"
       },
       {
         "path": "session-log.md",
+        "source": "templates/session-log.md",
         "action": "copy-template",
-        "note": "保留骨架中的模板结构，每次会话结束后追加"
+        "note": "保留骨架中的模板结构，复制到项目根目录，每次会话结束后追加"
       },
       {
         "path": "decisions.md",
+        "source": "templates/decisions.md",
         "action": "copy-template",
-        "note": "保留骨架中的模板结构，有关键决策时追加 ADR"
+        "note": "保留骨架中的模板结构，复制到项目根目录，有关键决策时追加 ADR"
       },
       {
         "path": "troubleshooting.md",
+        "source": "templates/troubleshooting.md",
         "action": "copy-template",
-        "note": "保留骨架中的模板结构，遇到问题时追加"
+        "note": "保留骨架中的模板结构，复制到项目根目录，遇到问题时追加"
       },
       {
         "path": "lessons-learned.md",
+        "source": "templates/lessons-learned.md",
         "action": "copy-template",
-        "note": "保留骨架中的空表格，发现可复用经验时追加"
+        "note": "保留骨架中的空表格，复制到项目根目录，发现可复用经验时追加"
       }
     ],
     "rationale": "这些文件从项目第一天就需要存在。阶段一确认需求时就会有关键决策、可能遇到环境问题、可能发现可复用方法。没有它们，过程记录会丢失。"
@@ -139,12 +146,12 @@
   "fileTreeConvention": {
     "_infrastructure": "以下文件项目启动即创建，与阶段无关",
     "AGENTS.md": "项目级硬规则（从骨架模板填空）",
-    "vibe-coding-sop.md": "五阶段工作流参考（直接从骨架复制，不修改）",
-    "status.md": "当前进度/待办（从骨架模板初始化）",
-    "session-log.md": "会话历史（从骨架模板初始化，后续追加）",
-    "decisions.md": "关键决策记录（从骨架模板初始化，后续追加）",
-    "troubleshooting.md": "问题索引（从骨架模板初始化，后续追加）",
-    "lessons-learned.md": "跨项目经验（从骨架模板初始化，后续追加）",
+    "vibe-coding-sop.md": "五阶段工作流参考（从 templates/ 复制到项目根目录，不修改）",
+    "status.md": "当前进度/待办（从 templates/ 复制到项目根目录，后续填充）",
+    "session-log.md": "会话历史（从 templates/ 复制到项目根目录，后续追加）",
+    "decisions.md": "关键决策记录（从 templates/ 复制到项目根目录，后续追加）",
+    "troubleshooting.md": "问题索引（从 templates/ 复制到项目根目录，后续追加）",
+    "lessons-learned.md": "跨项目经验（从 templates/ 复制到项目根目录，后续追加）",
     "_phased_outputs": "以下文件按五阶段逐步生成",
     "docs/proposal.md": "phase-01 产出",
     "docs/design.md": "phase-02 产出",

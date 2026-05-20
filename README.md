@@ -22,21 +22,23 @@
 
 | 文件 | 操作 | 为什么立刻建立 |
 |------|------|---------------|
-| `AGENTS.md` | 从骨架复制，按项目填空 | 定义项目硬规则，Agent 每次会话必读 |
-| `vibe-coding-sop.md` | 直接复制（工作流参考，不修改） | 五阶段工作流的标准参考 |
-| `status.md` | 新建（保留模板） | 从第一天就需要记录"现在在哪" |
-| `session-log.md` | 新建（保留模板） | 第一次会话结束就要追加记录 |
-| `decisions.md` | 新建（保留模板） | 阶段一确认需求时就会有关键决策 |
-| `troubleshooting.md` | 新建（保留模板） | 阶段一也可能遇到环境问题 |
-| `lessons-learned.md` | 新建（保留空表格） | 阶段一就可能发现可复用的需求梳理方法 |
+| `AGENTS.md` | 从骨架根目录复制，按项目填空 | 定义项目硬规则，Agent 每次会话必读 |
+| `vibe-coding-sop.md` | 从骨架 `templates/` 复制（工作流参考，不修改） | 五阶段工作流的标准参考 |
+| `status.md` | 从骨架 `templates/` 复制模板 | 从第一天就需要记录"现在在哪" |
+| `session-log.md` | 从骨架 `templates/` 复制模板 | 第一次会话结束就要追加记录 |
+| `decisions.md` | 从骨架 `templates/` 复制模板 | 阶段一确认需求时就会有关键决策 |
+| `troubleshooting.md` | 从骨架 `templates/` 复制模板 | 阶段一也可能遇到环境问题 |
+| `lessons-learned.md` | 从骨架 `templates/` 复制模板 | 阶段一就可能发现可复用的需求梳理方法 |
 
-> **注意**：基础设施建立后，`AGENTS.md` 中的「0. 骨架消费协议」和「2. 必读上下文」立即生效。后续所有 Agent 会话都按此规则执行。
+> **目录结构说明**：骨架根目录只保留规则文件（`AGENTS.md`、`README.md`、`skeleton-manifest.json`）。所有模板文件在 `templates/` 子目录下。这样即使 Agent 无脑复制根目录，也只会复制规则文件，不会破坏项目。
+>
+> 基础设施建立后，`AGENTS.md` 中的「0. 骨架消费协议」和「2. 必读上下文」立即生效。后续所有 Agent 会话都按此规则执行。
 
 **场景 B：已有项目（已有 AGENTS.md）**
 - **不要替换**现有的 `AGENTS.md`
 - 把骨架 `AGENTS.md` 中的「2. 必读上下文」和「0. 骨架消费协议」章节**插入**到现有文件中
 - 建议插入位置：「项目定位」之后、「硬规则」之前
-- 补充建立 `status.md`、`session-log.md` 等缺失的基础设施文件
+- 从骨架 `templates/` 补充建立 `status.md`、`session-log.md` 等缺失的基础设施文件
 
 > ⚠️ **不要与 `prompt-next-session.md` 混用**。如果项目已有 `prompt-next-session.md`，建议迁移到本骨架体系后删除旧文件（或改名为 `.bak` 归档），避免双文件冗余。
 
