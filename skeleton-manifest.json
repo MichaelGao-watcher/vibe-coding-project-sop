@@ -138,10 +138,22 @@
       "如模块边界不清 → 回溯 phase-03，重新拆分任务"
     ]
   },
+  "knowledgeSync": {
+    "description": "跨项目知识聚合配置。将其他项目的 decisions/lessons-learned/troubleshooting 同步到本母库",
+    "configTemplate": "config/github-sync.json",
+    "syncScript": "scripts/sync-knowledge.py",
+    "triggerWords": ["同步知识", "拉取经验", "聚合知识"],
+    "rules": [
+      "来源标注：每条并入的内容必须标注 [来源:仓库名 @日期]",
+      "lessons-learned 按描述去重，troubleshooting 按关键词去重，decisions 不去重",
+      "合并前自动备份到 .backup/ 目录",
+      "同步完成后更新 status.md 记录同步摘要"
+    ]
+  },
   "consumerInstructions": {
-    "forLLMAgents": "先按 infrastructure 建立7个基础设施文件，再读取 vibe-coding-sop.md 的「项目起点判断」确定切入阶段。阶段二开始前读取 proposal.md 的技术需求确认（T-01~T-04），根据触发条件决定是否生成 optionalOutputs 中的文件。",
-    "forCLIPrograms": "Step 1: 复制 infrastructure.files。Step 2: 解析 phases 确定切入阶段。Step 3: 执行阶段一时确保产出 proposal.md 并包含技术需求确认。Step 4: 阶段二开始前检查 proposal.md 中的 T-01~T-04，匹配 optionalOutputs 的 trigger 条件，决定是否额外生成对应文件。",
-    "forHumans": "参考 README.md 的「快速开始」章节：先初始化基础设施，再判断项目状态，最后按 SOP 阶段推进。阶段一会确认是否需要数据库/API/部署/安全等设计，后续阶段按需生成。"
+    "forLLMAgents": "先按 infrastructure 建立7个基础设施文件，再读取 vibe-coding-sop.md 的「项目起点判断」确定切入阶段。阶段二开始前读取 proposal.md 的技术需求确认（T-01~T-04），根据触发条件决定是否生成 optionalOutputs 中的文件。如用户触发知识同步（说「同步知识」「拉取经验」「聚合知识」），按 vibe-coding-sop.md 附录 B 执行跨项目知识同步 SOP。",
+    "forCLIPrograms": "Step 1: 复制 infrastructure.files。Step 2: 解析 phases 确定切入阶段。Step 3: 执行阶段一时确保产出 proposal.md 并包含技术需求确认。Step 4: 阶段二开始前检查 proposal.md 中的 T-01~T-04，匹配 optionalOutputs 的 trigger 条件，决定是否额外生成对应文件。Step 5: 如需知识同步，读取 config/github-sync.json，运行 scripts/sync-knowledge.py。",
+    "forHumans": "参考 README.md 的「快速开始」章节：先初始化基础设施，再判断项目状态，最后按 SOP 阶段推进。阶段一会确认是否需要数据库/API/部署/安全等设计，后续阶段按需生成。如需聚合其他项目的经验，配置 config/github-sync.json 后运行 scripts/sync-knowledge.py。"
   },
   "fileTreeConvention": {
     "_infrastructure": "以下文件项目启动即创建，与阶段无关",

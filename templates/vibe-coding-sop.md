@@ -273,3 +273,119 @@ Step 4: 如果又超时，重复 Step 1~3
 > **分层说明**：
 > - **基础设施**（`AGENTS.md`、`status.md`、`session-log.md` 等）：项目启动时立刻建立，与所处阶段无关。阶段一确认需求时就会有关键决策，需要立即记录。
 > - **阶段产出**（`docs/*`、`prompt.md`、`src/`）：按 SOP 五阶段逐步生成，根据项目状态选择切入点。
+
+
+---
+
+## 附录 B：跨项目知识同步 SOP
+
+> 当用户说「同步知识」「拉取经验」「聚合知识」时执行本流程。
+> 目标：将用户 GitHub 所有项目中的 `decisions.md`、`lessons-learned.md`、`troubleshooting.md` 聚合到本项目，形成跨项目知识母库。
+
+### 配置初始化（首次执行）
+
+1. 检查 `config/github-sync.json` 是否存在
+   - 不存在 → 从骨架模板复制，提示用户填写 `username` 和 `token`
+   - 存在但 `username` 为空 → 提示用户填写
+2. 确认 `includeRepos` 和 `excludeRepos`：
+   - 两者都为空 → 同步该用户的**全部**仓库
+   - `includeRepos` 非空 → 只同步列表中的仓库
+   - `excludeRepos` 非空 → 排除列表中的仓库
+
+### 执行方式 A：自动化脚本（推荐）
+
+**前提**：环境已安装 Python 和 `requests`
+
+```bash
+# 1. 安装依赖（如未安装）
+pip install requests
+
+# 2. 运行同步脚本
+python scripts/sync-knowledge.py
+```
+
+脚本会自动完成：
+- 调用 GitHub API 获取仓库列表
+- 拉取每个仓库的目标文件
+- 解析、去重、标注来源
+- 合并到本项目的母库文件
+- 输出同步报告
+
+### 执行方式 B：AI 原生手动流程（Fallback）
+
+当脚本环境不可用时，AI 按以下步骤手动执行：
+
+**Step 1 — 读取配置**
+- 读取 `config/github-sync.json` 获取 `username`、`token`、`includeRepos`、`excludeRepos`
+
+**Step 2 — 获取仓库列表**
+- 使用 `FetchURL` 调用 `https://api.github.com/users/{username}/repos?per_page=100`
+- 如配置了 Token，在 Header 中附加 `Authorization: Bearer {token}`
+- 按 `includeRepos`/`excludeRepos` 过滤
+
+**Step 3 — 拉取知识文件**
+- 对每个仓库，尝试拉取以下 URL：
+  - `https://raw.githubusercontent.com/{username}/{repo}/{branch}/decisions.md`
+  - `https://raw.githubusercontent.com/{username}/{repo}/{branch}/lessons-learned.md`
+  - `https://raw.githubusercontent.com/{username}/{repo}/{branch}/troubleshooting.md`
+- 404 则跳过（该仓库无此文件）
+
+**Step 4 — 备份母库**
+- 将本项目的 `decisions.md`、`lessons-learned.md`、`troubleshooting.md` 复制到 `.backup/` 目录，命名带时间戳
+
+**Step 5 — 解析与去重**
+
+| 文件 | 解析方式 | 去重规则 |
+|------|---------|---------|
+| `decisions.md` | 提取 `## ADR-xxx:` 区块 | **不去重**，全部追加 |
+| `lessons-learned.md` | 提取表格行和列表项 | 按「经验描述」去重，合并来源标签 |
+| `troubleshooting.md` | 提取 `### [错误关键词]` 区块 | 按「错误关键词」去重，保留最全解决方案 |
+
+**Step 6 — 标注来源**
+- 所有并入的内容追加来源标签：`[来源:仓库名 @YYYY-MM-DD]`
+- 本项目原有内容标记为 `[母库]`
+
+**Step 7 — 合并写入**
+- 使用 `WriteFile`/`StrReplaceFile` 将合并后的内容写回母库文件
+- 保持原有 Markdown 结构，新内容追加到对应章节末尾
+
+**Step 8 — 输出报告**
+
+```markdown
+【知识同步报告】
+📦 同步仓库数：X
+📄 拉取文件数：Y
+✨ 新增条目数：Z
+
+📁 更新文件：
+  - decisions.md：+A 条
+  - lessons-learned.md：+B 条
+  - troubleshooting.md：+C 条
+
+💾 备份位置：.backup/
+```
+
+**Step 9 — 更新状态**
+- 追加 `status.md`「更新记录」：记录本次同步时间和摘要
+
+### 合并规范（不可违反）
+
+1. **来源必须标注**：每条并入内容必须有 `[来源:仓库名 @日期]`
+2. **合并前必须备份**：备份到 `.backup/`，命名带时间戳
+3. **去重策略**：
+   - `lessons-learned` → 按描述去重，相同经验合并来源
+   - `troubleshooting` → 按关键词去重，不同场景的解决方案并列保留
+   - `decisions` → 不去重，ADR 上下文差异可能很大
+4. **母库优先**：本项目原有内容优先保留，新内容追加
+5. **空文件跳过**：源文件为空或为模板占位符时跳过
+
+### 验证清单
+
+同步完成后，AI 应自检以下项目：
+
+- [ ] `config/github-sync.json` 配置正确且已保存
+- [ ] `.backup/` 目录存在且包含本次备份
+- [ ] 所有新增条目都标注了 `[来源:仓库名 @日期]`
+- [ ] 无重复条目（按去重规则检查）
+- [ ] `status.md` 已更新同步记录
+- [ ] 同步报告已输出给用户

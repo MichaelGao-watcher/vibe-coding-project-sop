@@ -1,0 +1,28 @@
+{
+  "_comment": "跨项目知识同步配置。修改后运行 scripts/sync-knowledge.py 即可聚合经验。",
+  "username": "MichaelGao1999",
+  "token": "",
+  "includeRepos": [],
+  "excludeRepos": [],
+  "targetFiles": [
+    "decisions.md",
+    "lessons-learned.md",
+    "troubleshooting.md"
+  ],
+  "branch": "main",
+  "backupBeforeMerge": true,
+  "mergeStrategy": {
+    "lessonsLearned": {
+      "dedupBy": "description",
+      "action": "mergeSources"
+    },
+    "troubleshooting": {
+      "dedupBy": "keyword",
+      "action": "keepLongestSolution"
+    },
+    "decisions": {
+      "dedupBy": "none",
+      "action": "appendAll"
+    }
+  }
+}
