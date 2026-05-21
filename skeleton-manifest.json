@@ -160,6 +160,7 @@
     "docs/tasks/task-progress.md": "phase-03 产出（总进度看板）",
     "prompt.md": "phase-04 产出（主控指令）",
     "src/": "phase-05 产出（源码）",
+    "tests/": "phase-05 产出（测试）",
     "skeleton-manifest.json": "本文件（骨架元数据，供机器读取）"
   }
 }

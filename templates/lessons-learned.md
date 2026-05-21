@@ -68,7 +68,7 @@
 - [文档维护中的改进或教训]
 
 ### 环境陷阱
-- Windows Git Bash 下执行 `git init` 时，所有文本文件会触发 `LF will be replaced by CRLF` 警告。这不会阻断提交，但跨平台协作前建议统一配置 `core.autocrlf`（如 `git config --global core.autocrlf true`），否则 Linux/Mac 协作者可能遇到行尾符混乱。
+- [环境陷阱描述，如工具链/操作系统特有的配置问题]
 
 ---
 
