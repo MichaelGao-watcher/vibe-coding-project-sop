@@ -18,32 +18,63 @@
 
 ### 第一步：初始化项目基础设施（所有项目都需要）
 
-以下 7 个文件是项目的**通用基础设施**，无论新项目、已有项目还是半成品，都应该在项目启动时立刻建立：
+以下 7 个文件是项目的**通用基础设施**，无论新项目、已有项目还是半成品，都应该在项目启动时立刻建立。
 
-| 文件 | 操作 | 为什么立刻建立 |
-|------|------|---------------|
-| `AGENTS.md` | 从骨架根目录复制，按项目填空 | 定义项目硬规则，Agent 每次会话必读 |
-| `vibe-coding-sop.md` | 从骨架 `templates/` 复制（工作流参考，不修改） | 五阶段工作流的标准参考 |
-| `status.md` | 从骨架 `templates/` 复制模板 | 从第一天就需要记录"现在在哪" |
-| `session-log.md` | 从骨架 `templates/` 复制模板 | 第一次会话结束就要追加记录 |
-| `decisions.md` | 从骨架 `templates/` 复制模板 | 阶段一确认需求时就会有关键决策 |
-| `troubleshooting.md` | 从骨架 `templates/` 复制模板 | 阶段一也可能遇到环境问题 |
-| `lessons-learned.md` | 从骨架 `templates/` 复制模板 | 阶段一就可能发现可复用的需求梳理方法 |
+#### 推荐：一键初始化脚本
 
-> **目录结构说明**：骨架根目录只保留规则文件（`AGENTS.md`、`README.md`、`skeleton-manifest.json`）。所有模板文件在 `templates/` 子目录下。这样即使 Agent 无脑复制根目录，也只会复制规则文件，不会破坏项目。
->
-> 基础设施建立后，`AGENTS.md` 中的「0. 骨架消费协议」和「2. 必读上下文」立即生效。后续所有 Agent 会话都按此规则执行。
+```bash
+# 进入新项目根目录，运行初始化脚本
+cd /path/to/your-project
+python /path/to/vibe-coding-project-sop/scripts/init-skeleton.py \
+    --skeleton /path/to/vibe-coding-project-sop \
+    --with-knowledge
+```
+
+脚本会自动：
+- 从 `templates/` 复制 6 个基础设施模板（status.md、session-log.md 等）
+- 从骨架根目录复制 `AGENTS.md` 模板（需后续按项目填空）
+- 复制母库经验（94 条 lessons-learned / troubleshooting / decisions）
+- 检测冲突文件，避免覆盖已有内容
+- 输出初始化报告，提示下一步操作
+
+**常用快捷方式**（设置环境变量后不用每次写路径）：
+
+```bash
+# Linux/macOS
+export SOP_SKELETON_PATH=/path/to/vibe-coding-project-sop
+python $SOP_SKELETON_PATH/scripts/init-skeleton.py --with-knowledge
+
+# Windows
+set SOP_SKELETON_PATH=D:\Vibe-Code\vibe-coding-project-sop
+python %SOP_SKELETON_PATH%\scripts\init-skeleton.py --with-knowledge
+```
+
+#### 备选：手动复制
+
+如果无法运行脚本，可手动从 `templates/` 和骨架根目录复制：
+
+| 文件 | 来源 | 说明 |
+|------|------|------|
+| `AGENTS.md` | 骨架根目录 | 按项目填空 |
+| `vibe-coding-sop.md` | `templates/` | 原样复制，不修改 |
+| `status.md` | `templates/` | 后续填充 |
+| `session-log.md` | `templates/` | 后续追加 |
+| `decisions.md` | `templates/` | 后续追加 ADR |
+| `troubleshooting.md` | `templates/` | 后续追加问题 |
+| `lessons-learned.md` | `templates/` | 后续追加经验 |
+
+---
 
 **场景 B：已有项目（已有 AGENTS.md）**
 - **不要替换**现有的 `AGENTS.md`
 - 把骨架 `AGENTS.md` 中的「2. 必读上下文」和「0. 骨架消费协议」章节**插入**到现有文件中
 - 建议插入位置：「项目定位」之后、「硬规则」之前
-- 从骨架 `templates/` 补充建立 `status.md`、`session-log.md` 等缺失的基础设施文件
+- 运行初始化脚本（它会检测已有文件并跳过，只补充缺失的）
 
 > ⚠️ **不要与 `prompt-next-session.md` 混用**。如果项目已有 `prompt-next-session.md`，建议迁移到本骨架体系后删除旧文件（或改名为 `.bak` 归档），避免双文件冗余。
 
 **场景 C：半成品项目（已有代码）**
-- 保留现有代码，补充建立缺失的基础设施文件
+- 保留现有代码，运行初始化脚本补充缺失的基础设施文件
 - 从 `vibe-coding-sop.md` **阶段五**开始：先让 AI 评估现有代码，再决定是继续开发还是回溯补文档
 - 如需回溯：根据代码反推 → 补 `docs/design.md` → 补 `docs/tasks/*.md` → 继续阶段五
 
@@ -82,6 +113,41 @@ python scripts/sync-knowledge.py
 curl https://raw.githubusercontent.com/MichaelGao1999/vibe-coding-project-sop/master/AGENTS.md
 curl https://raw.githubusercontent.com/MichaelGao1999/vibe-coding-project-sop/master/templates/agents-for-others.md
 ```
+
+---
+
+### （可选）从母库获取经验
+
+骨架根目录的 `lessons-learned.md` 是**跨项目知识母库**（当前已聚合 94 条经验），新项目初始化时建议一并继承。
+
+**初始化时直接继承（推荐）**
+
+```bash
+python /path/to/vibe-coding-project-sop/scripts/init-skeleton.py \
+    --skeleton /path/to/vibe-coding-project-sop \
+    --with-knowledge
+```
+
+`--with-knowledge` 会把母库的 `lessons-learned.md`、`troubleshooting.md`、`decisions.md` 作为初始种子复制过去，新项目自己的经验后续追加到「技术经验」表格即可。
+
+**后续增量同步（母库更新后）**
+
+若母库后续新增了经验，新项目可以用 `sync-knowledge.py` 拉取增量：
+
+```bash
+# 1. 复制脚本和配置
+mkdir -p scripts config
+cp /path/to/vibe-coding-project-sop/scripts/sync-knowledge.py scripts/
+cp /path/to/vibe-coding-project-sop/config/github-sync.json config/
+
+# 2. 修改 config/github-sync.json，只包含母库仓库
+#    "includeRepos": ["vibe-coding-project-sop"]
+
+# 3. 运行同步
+python scripts/sync-knowledge.py
+```
+
+> **分工**：`init-skeleton.py` 负责**首次一键初始化**（基础设施 + 可选母库种子）；`sync-knowledge.py` 负责**后续增量同步**（保持与母库更新同步）。
 
 ---
 

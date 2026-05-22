@@ -39,7 +39,7 @@
 
 ### 消费步骤
 
-1. **建立基础设施层**：从 `templates/` 复制 7 个文件到项目根目录
+1. **建立基础设施层**：运行 `scripts/init-skeleton.py` 一键初始化（或从 `templates/` 手动复制 7 个文件到项目根目录）
 2. **读取 `vibe-coding-sop.md`** → 查看「项目起点判断」，确定切入阶段
 3. **按阶段边界逐步推进**：每阶段完成后结束，等待用户开启新会话进入下一阶段
 
@@ -178,7 +178,8 @@
 
 | ID | 模块名 | 职责 | 技术要点 |
 |----|--------|------|---------|
-| M01 | [模块] | [职责] | [技术] |
+| M01 | init-skeleton | 一键初始化脚本，复制基础设施 + 可选母库经验 | `python scripts/init-skeleton.py --skeleton <path> --with-knowledge` |
+| M02 | sync-knowledge | 跨项目知识同步脚本，聚合其他仓库经验到母库 | `python scripts/sync-knowledge.py` |
 
 ---
 
@@ -199,3 +200,4 @@
 | 日期 | 更新内容 |
 |------|---------|
 | 2026-05-21 | 新增 RULE-05 跨项目知识同步规则、3.7 知识同步指令、config/github-sync.json 基础设施 |
+| 2026-05-21 | 新增 `scripts/init-skeleton.py` 一键初始化脚本，支持 `--with-knowledge` 复制母库经验 |
