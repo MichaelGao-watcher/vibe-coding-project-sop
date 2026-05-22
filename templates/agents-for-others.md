@@ -1,16 +1,17 @@
 ## 3.7 母库经验指令（「母库经验」）
 
-> 本章节为**其他项目专用**。其他项目从母库 `vibe-coding-project-sop` 获取已沉淀的跨项目经验。
+> 本章节为**其他项目专用**。由 `pull.py` 自动拉取母库经验。
+> 其他项目从母库 `vibe-coding-project-sop` 获取已沉淀的跨项目经验。
 > 母库本身不需要此指令，母库使用「同步知识」（聚合模式）。
 
-**触发词**：`母库经验`、`更新经验`、`拉母库`（去除标点后精确匹配任一）
+**触发词**：`拉取母库`、`母库经验`、`更新经验`（去除标点后精确匹配任一）
 
 **防误触**：
 - 消息精确匹配上述任一触发词 → 执行母库经验同步流程
 - 消息包含触发词但还有其他内容 → 视为正常对话，不触发
 
 **前置条件**：
-- 项目根目录存在 `scripts/sync-knowledge.py`
+- 项目根目录存在 `scripts/pull.py`（或 `scripts/sync-knowledge.py`）
 - 项目根目录存在 `config/github-sync.json` 且 `syncFrom` 已填写母库仓库名（如 `vibe-coding-project-sop`）
 
 **确认流程**：
@@ -19,10 +20,13 @@
 3. 等待用户二次确认
 
 **标准动作序列**：
-1. 检查 `scripts/sync-knowledge.py` 是否存在，如不存在 → 提示用户从母库复制
-2. 检查 `config/github-sync.json` 是否存在，如不存在 → 提示用户复制并配置
-3. 检查 `syncFrom` 是否为空，如为空 → 提示用户填写母库仓库名
-4. 运行 `python scripts/sync-knowledge.py`
+1. 检查 `scripts/pull.py` 是否存在
+   - 如存在 → 运行 `python pull.py`
+   - 如不存在 → 下载 `https://raw.githubusercontent.com/MichaelGao1999/vibe-coding-project-sop/master/scripts/pull.py`，然后运行
+2. 读取脚本输出，汇报同步结果：
+   - 母库仓库名
+   - 拉取到的文件数
+   - 新增条目数 / 全部已存在
 5. 解析脚本输出，汇报同步结果：
    - 母库仓库名
    - 拉取到的文件数

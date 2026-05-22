@@ -78,40 +78,35 @@ python %SOP_SKELETON_PATH%\scripts\init-skeleton.py --with-knowledge
 - 从 `vibe-coding-sop.md` **阶段五**开始：先让 AI 评估现有代码，再决定是继续开发还是回溯补文档
 - 如需回溯：根据代码反推 → 补 `docs/design.md` → 补 `docs/tasks/*.md` → 继续阶段五
 
-**场景 D：其他平级项目使用母库规则更新**
+**场景 D：其他项目从母库获取经验**
 
-> 母库（`vibe-coding-project-sop`）与其他项目是**平级目录关系**，非物理父子。其他项目按需获取母库的最新规则和经验。
+> 母库（`vibe-coding-project-sop`）与其他项目是**平级目录关系**，非物理父子。
 
-**获取母库经验文件（自动）**：
-
-配置 `config/github-sync.json` 的 `syncFrom` 字段指向母库，运行 `python scripts/sync-knowledge.py` 即可自动拉取母库的 `decisions.md`、`lessons-learned.md`、`troubleshooting.md`。
+**推荐方式：复制 `starter/` 工作区**
 
 ```bash
-# 1. 复制同步脚本和配置
- cp ../vibe-coding-project-sop/scripts/sync-knowledge.py ./scripts/
- cp ../vibe-coding-project-sop/config/github-sync.json ./config/
+# 复制完整工作区到新项目
+cp -r vibe-coding-project-sop/starter ./my-new-project
+cd my-new-project
 
-# 2. 修改配置：只从母库拉取
-# config/github-sync.json → "syncFrom": "vibe-coding-project-sop"
-
-# 3. 运行同步
-python scripts/sync-knowledge.py
+# 对 AI 说：
+拉取母库
 ```
 
-**获取母库 AGENTS.md 规则（手动）**：
+`starter/` 是 `templates/` 的预组装子集，包含新项目开工所需的全部基础设施：
+- `AGENTS.md`（含自然语言触发词）
+- `status.md`、`session-log.md`（最小空文件）
+- `vibe-coding-sop.md`、`anti-patterns-checklist.md`（核心参考）
+- `config/`、`scripts/`（已预填母库配置）
 
-`AGENTS.md` 包含项目特定内容（项目定位、模块速查表等），**不适合自动同步**。其他项目应手动参考母库 AGENTS.md，按需插入通用规则章节：
+复制后 AI 识别"拉取母库"，自动运行 `python pull.py`，从母库拉取经验文件。
 
-| 通用规则章节 | 来源 | 适用场景 |
-|-------------|------|---------|
-| 3.5 存档指令 | 母库 `AGENTS.md` | 所有项目 |
-| 3.6 恢复指令 | 母库 `AGENTS.md` | 所有项目 |
-| 3.7 母库经验指令 | 母库 `templates/agents-for-others.md` | 需要从母库消费经验的项目 |
+**Fallback：手动命令**
 
 ```bash
-# 从 GitHub 拉取母库通用规则，手动插入自己项目的 AGENTS.md
-curl https://raw.githubusercontent.com/MichaelGao1999/vibe-coding-project-sop/master/AGENTS.md
-curl https://raw.githubusercontent.com/MichaelGao1999/vibe-coding-project-sop/master/templates/agents-for-others.md
+# 下载并运行（无 starter/ 时）
+curl -o pull.py https://raw.githubusercontent.com/MichaelGao1999/vibe-coding-project-sop/master/scripts/pull.py
+python pull.py
 ```
 
 ---
