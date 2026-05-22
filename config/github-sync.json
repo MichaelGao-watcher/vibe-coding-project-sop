@@ -4,7 +4,7 @@
   "token": "",
   "includeRepos": [],
   "excludeRepos": [],
-  "_syncFromNote": "母库本身不需要 syncFrom 字段。此字段由 init-from-skeleton.py 在其他项目中自动创建。母库保持空配置即可遍历所有仓库。"
+  "_syncFromNote": "母库本身不需要 syncFrom 字段。此字段由 init-from-skeleton.py 在其他项目中自动创建。母库保持空配置即可遍历所有仓库。",
   "targetFiles": [
     "decisions.md",
     "lessons-learned.md",
