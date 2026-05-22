@@ -19,6 +19,7 @@ import re
 import shutil
 import sys
 from datetime import datetime
+from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
@@ -184,18 +185,36 @@ def read_local_file(path: Path) -> str:
     return ""
 
 
+def _similarity(a: str, b: str) -> float:
+    """计算两个字符串的相似度（0~1）。"""
+    return SequenceMatcher(None, a.lower(), b.lower()).ratio()
+
+
 def merge_decisions(local_text: str, remote_entries: list[dict], repo_name: str) -> str:
     today = datetime.now().strftime("%Y-%m-%d")
     source_tag = f"[来源:{repo_name} @{today}]"
-    # 在文件末尾追加新的 ADR，标注来源
     blocks = []
     for e in remote_entries:
         new_block = f"## {e['title']} {source_tag}\n\n{e['body']}\n"
-        # 简单去重：如果本地已有相同标题（不含来源标签），则跳过
         title_clean = re.sub(r"\[来源:.+?\]", "", e["title"]).strip()
+
+        # 精确去重
         if title_clean in local_text:
             log(f"  跳过已存在的决策: {title_clean}")
             continue
+
+        # 相似度去重（检测语义重复）
+        existing_titles = re.findall(r"^##\s+(.+?)$", local_text, re.MULTILINE)
+        dup = False
+        for existing in existing_titles:
+            existing_clean = re.sub(r"\[来源:.+?\]", "", existing).strip()
+            if _similarity(title_clean, existing_clean) > 0.75:
+                log(f"  跳过相似决策: {title_clean}（与「{existing_clean}」相似度 {_similarity(title_clean, existing_clean):.0%}）")
+                dup = True
+                break
+        if dup:
+            continue
+
         blocks.append(new_block)
     if blocks:
         separator = "\n---\n\n" if local_text.strip() else ""
@@ -207,22 +226,42 @@ def merge_lessons(local_text: str, remote_entries: list[dict], repo_name: str) -
     today = datetime.now().strftime("%Y-%m-%d")
     source_tag = f"[来源:{repo_name} @{today}]"
     added = 0
+    skipped_similar = 0
+
+    # 提取本地已有的经验描述
+    existing_descs = re.findall(r"^\|\s*\|\s*(.+?)\s*(?:\[来源:.+?\])?\s*\|", local_text, re.MULTILINE)
+
     for e in remote_entries:
         desc = e["description"]
         if not desc or desc.startswith("[") and desc.endswith("]"):
             continue
-        # 去重：如果本地已有相同描述（模糊匹配）
+
+        # 精确去重
         if desc in local_text:
             continue
-        # 找到技术经验表格，在末尾追加行
+
+        # 相似度去重
+        dup = False
+        for existing in existing_descs:
+            existing_clean = re.sub(r"\[来源:.+?\]", "", existing).strip()
+            if _similarity(desc, existing_clean) > 0.75:
+                skipped_similar += 1
+                dup = True
+                break
+        if dup:
+            continue
+
         line_to_add = f"| | {desc} {source_tag} | {e.get('source', '')} |"
-        # 尝试插入到表格最后
         table_end = local_text.rfind("|\n\n## ")
         if table_end == -1:
             table_end = len(local_text)
         local_text = local_text[:table_end] + line_to_add + "\n" + local_text[table_end:]
         added += 1
-    log(f"  新增经验: {added} 条")
+
+    if skipped_similar:
+        log(f"  新增经验: {added} 条，跳过相似: {skipped_similar} 条")
+    else:
+        log(f"  新增经验: {added} 条")
     return local_text
 
 
@@ -230,12 +269,29 @@ def merge_troubleshooting(local_text: str, remote_entries: list[dict], repo_name
     today = datetime.now().strftime("%Y-%m-%d")
     source_tag = f"[来源:{repo_name} @{today}]"
     blocks = []
+
+    # 提取本地已有的关键词
+    existing_keywords = re.findall(r"^###\s+(.+?)(?:\s+\[来源:.+?\])?$", local_text, re.MULTILINE)
+
     for e in remote_entries:
         keyword = e["keyword"]
-        # 去重：如果本地已有相同关键词
+
+        # 精确去重
         if keyword in local_text:
             log(f"  跳过已存在的问题: {keyword}")
             continue
+
+        # 相似度去重
+        dup = False
+        for existing in existing_keywords:
+            existing_clean = re.sub(r"\[来源:.+?\]", "", existing).strip()
+            if _similarity(keyword, existing_clean) > 0.75:
+                log(f"  跳过相似问题: {keyword}（与「{existing_clean}」相似度 {_similarity(keyword, existing_clean):.0%}）")
+                dup = True
+                break
+        if dup:
+            continue
+
         new_block = f"### {keyword} {source_tag}\n\n{e['body']}\n"
         blocks.append(new_block)
     if blocks:

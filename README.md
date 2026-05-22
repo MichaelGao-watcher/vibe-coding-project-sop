@@ -82,11 +82,13 @@ python %SOP_SKELETON_PATH%\scripts\init-skeleton.py --with-knowledge
 
 > 母库（`vibe-coding-project-sop`）与其他项目是**平级目录关系**，非物理父子。
 
-**推荐方式：复制 `starter/` 工作区**
+**推荐方式：复制 `starter/` 内的文件**
+
+> **注意：复制的是 starter/ 里面的文件，不是 starter/ 目录本身。**
 
 ```bash
-# 复制完整工作区到新项目
-cp -r vibe-coding-project-sop/starter ./my-new-project
+# 复制 starter/ 内的文件到新项目根目录
+cp -r vibe-coding-project-sop/starter/* ./my-new-project/
 cd my-new-project
 
 # 对 AI 说：

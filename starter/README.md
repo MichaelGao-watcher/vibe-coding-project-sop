@@ -6,13 +6,28 @@
 
 ### 1. 安装 starter/ 工作区
 
+**注意：复制的是 starter/ 里面的文件，不是 starter/ 目录本身。**
+
 ```bash
-# 复制 starter/ 到本项目
-cp -r vibe-coding-project-sop/starter ./my-project
+# 复制 starter/ 内的文件到本项目根目录（不要复制 starter/ 目录）
+cp -r vibe-coding-project-sop/starter/* ./my-project/
 cd my-project
 
 # 运行安全安装向导
 python install.py
+```
+
+### 2. 与 AI 交流前
+
+**每次会话开始时，先复制 `TRIGGERS.md` 给 AI**，确保快捷指令生效：
+
+```
+[复制 TRIGGERS.md 的全部内容]
+```
+
+然后即可使用触发词：
+```
+拉取母库
 ```
 
 `install.py` 会自动检查：

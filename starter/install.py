@@ -50,6 +50,27 @@ def check_agents() -> bool:
         return False
 
 
+def check_existing_knowledge() -> bool:
+    """检测是否已有经验内容（半成品项目）。"""
+    knowledge_files = {
+        "decisions.md": "决策记录",
+        "lessons-learned.md": "经验沉淀",
+        "troubleshooting.md": "问题索引",
+    }
+    has_content = False
+    for path, desc in knowledge_files.items():
+        p = Path(path)
+        if p.exists() and p.stat().st_size > 100:  # 粗略判断：大于100字节视为有内容
+            print(f"⚠️  检测到已有{desc}: {path}（非空）")
+            has_content = True
+    if has_content:
+        print("\n💡 提示：继续拉取母库将使用智能去重")
+        print("   - 标题/描述完全相同 → 自动跳过")
+        print("   - 相似度 > 75% → 自动跳过")
+        print("   - 其余内容 → 追加到文件末尾")
+    return has_content
+
+
 def ensure_files() -> bool:
     """检查并补全关键文件。"""
     required = {
@@ -80,6 +101,8 @@ def main() -> int:
     print()
 
     agents_ok = check_agents()
+    print()
+    check_existing_knowledge()
     print()
     files_ok = ensure_files()
     print()
