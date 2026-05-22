@@ -98,7 +98,11 @@ vibe-coding-project-sop/
 |------|---------|
 | 2026-05-21 | 新增跨项目知识同步 SOP：config/github-sync.json、scripts/sync-knowledge.py、AGENTS.md RULE-05、vibe-coding-sop.md 附录 B、模板跨项目来源格式、skeleton-manifest.json knowledgeSync 段 |
 | 2026-05-21 | **首次知识同步成功**：从 MichaelGao1999 的 blindfold-chess、french-exit 仓库拉取知识，合并为母库。decisions.md 304行、lessons-learned.md 94条经验、troubleshooting.md 238行。发现并修复了 lessons-learned 模板内容混入问题，脚本增加 `_is_valid_lesson` 过滤逻辑。 |
-| 2026-05-21 | **lessons-learned 标签化完成**：94 条经验全部打标签（CRITICAL 8 条 / WARNING 33 条 / INFO 53 条），新增 `templates/anti-patterns-checklist.md` 作为阶段二设计自检模板。母库表格增加「标签」「严重度」两列。
+| 2026-05-21 | **lessons-learned 标签化完成**：94 条经验全部打标签（CRITICAL 8 条 / WARNING 33 条 / INFO 53 条），新增 `templates/anti-patterns-checklist.md` 作为阶段二设计自检模板。母库表格增加「标签」「严重度」两列。 |
+| 2026-05-22 | **同步脚本分支自适应**：修复 `vibe-coding-project-sop` 因默认分支为 `master` 而被 404 跳过的问题。脚本优先读取 GitHub API 返回的 `default_branch`，不再硬编码 `main`。 |
+| 2026-05-22 | **新增 syncFrom 母库分发模式**：`config/github-sync.json` 新增 `syncFrom` 字段，配置后脚本只从指定单一仓库拉取（分发模式），与原有聚合模式（遍历所有仓库）共存。验证通过：聚合模式遍历 3 个仓库，分发模式只拉取母库。 |
+| 2026-05-22 | **AGENTS 分离设计**：新建 `templates/agents-for-others.md`，将母库专用指令（3.7 同步知识）与其他项目专用指令（3.7 母库经验）物理分离。母库 AGENTS.md 保留聚合指令，其他项目按需插入分发指令。 |
+| 2026-05-22 | **文档用词修正**：统一将"子项目"改为"其他项目"，明确母库与其他项目为平级目录关系，消除物理层级误解。更新 `AGENTS.md`、`templates/agents-for-others.md`、`README.md`。 |
 
 ---
 

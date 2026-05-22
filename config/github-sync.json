@@ -4,6 +4,8 @@
   "token": "",
   "includeRepos": [],
   "excludeRepos": [],
+  "syncFrom": "",
+  "_syncFromComment": "如果填写了 syncFrom（如 vibe-coding-project-sop），脚本将只从该单一仓库拉取经验（母库分发模式）；为空则按 includeRepos/excludeRepos 遍历多个仓库（聚合模式）。",
   "targetFiles": [
     "decisions.md",
     "lessons-learned.md",

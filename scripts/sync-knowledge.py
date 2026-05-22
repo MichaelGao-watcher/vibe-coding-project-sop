@@ -264,20 +264,33 @@ def run_sync(config_path: str) -> int:
         log("错误: config/github-sync.json 中 username 为空，请先填写 GitHub 用户名")
         return 1
 
-    log(f"开始同步用户 {username} 的仓库知识...")
-    repos = list_repos(username, token)
-    repos = filter_repos(repos, include, exclude)
-    log(f"发现 {len(repos)} 个目标仓库")
+    sync_from = cfg.get("syncFrom", "").strip()
+
+    if sync_from:
+        log(f"母库同步模式: 只从 {sync_from} 拉取更新")
+        repo_info = api_get(f"{GITHUB_API}/repos/{username}/{sync_from}", token)
+        if not repo_info:
+            log(f"错误: 无法获取仓库 {sync_from} 的信息")
+            return 1
+        repo_branch = repo_info.get("default_branch", branch)
+        repos = [{"name": sync_from, "default_branch": repo_branch}]
+        log(f"跳过其他仓库，只处理母库")
+    else:
+        log(f"开始同步用户 {username} 的仓库知识...")
+        repos = list_repos(username, token)
+        repos = filter_repos(repos, include, exclude)
+        log(f"发现 {len(repos)} 个目标仓库")
 
     stats = {"repos": 0, "files": 0, "entries": 0}
 
     for repo in repos:
         repo_name = repo["name"]
-        log(f"处理仓库: {repo_name}")
+        repo_branch = repo.get("default_branch", branch)
+        log(f"处理仓库: {repo_name} (分支: {repo_branch})")
         stats["repos"] += 1
 
         for fname in targets:
-            raw = fetch_raw(username, repo_name, branch, fname)
+            raw = fetch_raw(username, repo_name, repo_branch, fname)
             if raw is None:
                 continue
             stats["files"] += 1
