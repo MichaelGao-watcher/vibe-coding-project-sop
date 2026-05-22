@@ -78,6 +78,39 @@ python %SOP_SKELETON_PATH%\scripts\init-skeleton.py --with-knowledge
 - 从 `vibe-coding-sop.md` **阶段五**开始：先让 AI 评估现有代码，再决定是继续开发还是回溯补文档
 - 如需回溯：根据代码反推 → 补 `docs/design.md` → 补 `docs/tasks/*.md` → 继续阶段五
 
+**场景 D：其他项目从母库获取经验**
+
+> 母库（`vibe-coding-project-sop`）与其他项目是**平级目录关系**，非物理父子。
+
+**推荐方式：复制 `starter/` 内的文件**
+
+> **注意：复制的是 starter/ 里面的文件，不是 starter/ 目录本身。**
+
+```bash
+# 复制 starter/ 内的文件到新项目根目录
+cp -r vibe-coding-project-sop/starter/* ./my-new-project/
+cd my-new-project
+
+# 对 AI 说：
+拉取母库
+```
+
+`starter/` 是 `templates/` 的预组装子集，包含新项目开工所需的全部基础设施：
+- `AGENTS.md`（含自然语言触发词）
+- `status.md`、`session-log.md`（最小空文件）
+- `vibe-coding-sop.md`、`anti-patterns-checklist.md`（核心参考）
+- `config/`、`scripts/`（已预填母库配置）
+
+复制后 AI 识别"拉取母库"，自动运行 `python pull.py`，从母库拉取经验文件。
+
+**Fallback：手动命令**
+
+```bash
+# 下载并运行（无 starter/ 时）
+curl -o pull.py https://raw.githubusercontent.com/MichaelGao1999/vibe-coding-project-sop/master/scripts/pull.py
+python pull.py
+```
+
 ---
 
 ### （可选）从母库获取经验

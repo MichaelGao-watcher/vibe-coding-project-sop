@@ -1,16 +1,17 @@
 {
-  "_comment": "跨项目知识同步配置。修改后运行 scripts/sync-knowledge.py 即可聚合经验。",
+  "_comment": "由 pull.py 自动创建。修改后运行 python scripts/pull.py 同步更新。",
   "username": "MichaelGao1999",
   "token": "",
   "includeRepos": [],
   "excludeRepos": [],
-  "_syncFromNote": "母库本身不需要 syncFrom 字段。此字段由 init-from-skeleton.py 在其他项目中自动创建。母库保持空配置即可遍历所有仓库。",
+  "syncFrom": "vibe-coding-project-sop",
+  "_syncFromComment": "只从指定母库拉取经验。如需改为聚合模式（遍历所有仓库），请清空此字段。",
   "targetFiles": [
     "decisions.md",
     "lessons-learned.md",
     "troubleshooting.md"
   ],
-  "branch": "main",
+  "branch": "master",
   "backupBeforeMerge": true,
   "mergeStrategy": {
     "lessonsLearned": {
