@@ -117,3 +117,4 @@ vibe-coding-project-sop/
 - **更新记录**：追加本轮更新摘要
 
 | 2026-05-22 | 修复恢复指令增加 git pull 步骤；安装 Superpowers B 方案（14 skills 符号链接 + Kimi 适配 patch）；将跨项目知识同步机制完整写入 blindfold-chess（config/github-sync.json、scripts/sync-knowledge.py、AGENTS.md RULE-07、存档/恢复/同步知识触发词、lessons-learned/troubleshooting 来源格式标准化） |
+| 2026-05-22 | **老设备 LLM 服务部署完成**：llama.cpp + Qwen2.5-0.5B 在 i7-7500U/8GB 上运行，速度 20 tokens/s，API 端点 192.168.18.122:11434。相关脚本整理到 llm-server/ 目录。

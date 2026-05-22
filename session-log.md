@@ -84,3 +84,27 @@
 **遗留问题/下轮开始点**：
 - 用户明天计划试用 Superpowers skills（已写入 status.md 待办）
 - blindfold-chess 需配置 GitHub token 后运行首次母库同步
+
+---
+
+## 2026-05-22
+
+**会话类型**：LLM 服务部署 + 环境诊断
+
+**完成内容**：
+1. 诊断老设备硬件（i7-7500U/8GB/无独显），评估本地部署可行性
+2. 原计划用 Ollama，因 GitHub 完全超时、2GB 安装包不可下载而放弃
+3. 改用 llama.cpp 方案：18MB 二进制通过 gh.llkk.cc 加速镜像下载（2MB/s）
+4. Qwen2.5-0.5B 模型通过 ModelScope CDN 下载（2.95MB/s，469MB/48秒）
+5. 成功启动 llama-server，加载模型，监听 0.0.0.0:11434
+6. 中英文推理测试通过，速度约 20 tokens/s（纯 CPU）
+7. 环境变量配置（OLLAMA_HOST=0.0.0.0，OLLAMA_NUM_THREAD=4）
+8. 发现 PowerShell 5.1 UTF-8 无 BOM 解析陷阱，修复 start-llm-server.ps1 编码
+9. 创建 llm-server/ 目录，整理所有脚本和文档
+10. 删除 Ollama 安装包半成品（73MB）
+
+**评估结论**：老设备已成功部署为局域网 LLM 服务器，llama.cpp 方案在 8GB 内存限制下运行良好。
+
+**遗留问题/下轮开始点**：
+- 防火墙规则需首次以管理员身份运行 start-llm-server.ps1 添加
+- 老设备 IP 变动时需更新 macbook-connect.md

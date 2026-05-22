@@ -159,3 +159,7 @@
 
 | 95 | 在 Kimi Code CLI 上安装 Superpowers 需分 A/B 方案：A 方案替换 CLI 为 feat/hook-inject-prompt 分支实现自动注入；B 方案只克隆 skills 到 ~/.kimi/skills/ 手动调用，零风险 | 工具链配置 | [来源:vibe-coding-project-sop @2026-05-22] |
 | 96 | 评估 skill 是否适合当前项目时，不应只看功能描述，而应对比项目形态（纯文档/工具型项目不需要 frontend-design 等前端实现型 skill） | 项目评估 | [来源:vibe-coding-project-sop @2026-05-22] |
+| 97 | PowerShell 5.1 默认以 Windows-1252 编码读取无 BOM 的 UTF-8 文件，中文字符被解码为乱码后会破坏引号匹配，导致 UnexpectedToken 语法错误。修复方案：文件头添加 UTF-8 BOM（EF BB BF） | 环境兼容 | [来源:vibe-coding-project-sop @2026-05-22] |
+| 98 | ModelScope 首页 HTTP 访问速度（~8KB/s）与实际 CDN 模型下载速度（~2.5MB/s）差异巨大，下载 .gguf 模型文件时应直接测试 CDN 链接而非首页 | 网络诊断 | [来源:vibe-coding-project-sop @2026-05-22] |
+| 99 | GitHub 下载完全不可达时，可尝试加速镜像 gh.llkk.cc，实测速度 300KB/s+，支持断点续传 | 网络诊断 | [来源:vibe-coding-project-sop @2026-05-22] |
+| 100 | llama.cpp 的 server 模式兼容 OpenAI API 格式（/v1/chat/completions），可直接作为 Ollama 的轻量替代，体积仅 18MB vs Ollama 2GB | 工具选型 | [来源:vibe-coding-project-sop @2026-05-22] |

@@ -354,3 +354,25 @@
 - 不复制 init-skeleton.py / templates/ / starter/（应用项目不需要）
 
 **后果**：blindfold-chess 的 AI 规则手册现在支持"同步知识"指令，经验可以双向流动（子项目积累 → 回写母库 → 其他子项目获取）。
+
+---
+
+## 2026-05-22 — 老设备 LLM 服务部署：Ollama → llama.cpp
+
+**背景**：用户计划将闲置老设备（i7-7500U/8GB/无独显）配置为局域网 LLM 服务器，供新 MacBook Air 的 CLI Agent 调用。
+
+**决策**：放弃 Ollama 方案，改用 llama-cpp 方案。
+
+**原因**：
+1. Ollama Windows 安装包（2GB）只能从 GitHub 下载，而 GitHub 在该网络环境下完全超时
+2. llama.cpp 的 Windows 二进制仅 18MB，可通过 GitHub 加速镜像（gh.llkk.cc）在数分钟内下载完成
+3. 模型文件（.gguf）可通过 ModelScope CDN 以 2.5MB/s 的速度快速下载
+
+**范围**：
+- 使用 llama.cpp server 模式启动 OpenAI 兼容 API 服务
+- 加载 Qwen2.5-0.5B-Instruct（Q4_K_M）模型，内存占用约 450MB
+- 配置环境变量 OLLAMA_HOST=0.0.0.0:11434（保留兼容命名）
+- 创建一键启动脚本 start-llm-server.ps1
+- 整理所有相关文件到 llm-server/ 目录
+
+**后果**：老设备成功运行局域网 LLM 服务，推理速度约 20 tokens/s（纯 CPU），MacBook Air 可通过标准 OpenAI API 客户端连接。

@@ -236,3 +236,14 @@
 ## 存档提示
 
 **用户说「存储」时**，AI 应回顾本轮会话内容，评估是否有新的具体报错需要记入本文件。有则按模板追加；没有则跳过。
+
+---
+
+### PowerShell 执行中文脚本报 "UnexpectedToken" [来源:vibe-coding-project-sop @2026-05-22]
+
+| | 内容 |
+|---|---|
+| **现象** | .\start-llm-server.ps1 执行时报错：表达式或语句中包含意外的标记"}"，行号指向 `}` |
+| **原因** | PowerShell 5.1 默认以 Windows-1252 编码读取无 BOM 的 UTF-8 文件，中文字符被错误解码后破坏了字符串引号匹配，导致解析器认为 `}` 位置不对 |
+| **解决** | 给脚本文件添加 UTF-8 BOM（文件头添加字节 EF BB BF）：`printf '\xef\xbb\xbf' > file.ps1 && cat original.ps1 >> file.ps1` |
+| **注意** | PowerShell 7+ 默认支持 UTF-8 无 BOM，但 Windows 10 自带的 PowerShell 5.1 仍受此限制 |
