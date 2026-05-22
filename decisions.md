@@ -338,3 +338,19 @@
 *新增决策时复制上方模板，填写后追加到文件末尾。*
 
 ---
+
+---
+
+## 2026-05-22 — 将跨项目知识同步机制部署到 blindfold-chess
+
+**背景**：blindfold-chess 已使用 vibe-coding-project-sop 的文档骨架，但缺少跨项目知识同步的"拉取"能力（只有母库能聚合，子项目无法反向获取）。
+
+**决策**：将母库的 sync-knowledge.py 完整复制到 blindfold-chess，并配置 syncFrom 指向母库，使子项目也能从母库聚合经验。
+
+**范围**：
+- 复制 config/github-sync.json + scripts/sync-knowledge.py
+- AGENTS.md 增加 RULE-07 和同步知识触发词
+- 标准化 lessons-learned / troubleshooting 的来源格式
+- 不复制 init-skeleton.py / templates/ / starter/（应用项目不需要）
+
+**后果**：blindfold-chess 的 AI 规则手册现在支持"同步知识"指令，经验可以双向流动（子项目积累 → 回写母库 → 其他子项目获取）。

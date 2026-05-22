@@ -156,3 +156,6 @@
 | | **工具硬性限制不要绕圈分析可行性**。Kimi CLI 多窗口无 IPC、无共享内存、无实时同步——这不是"有难度"，是"设计上就不支持"。回答应直接给结论 + 风险 + 替代方案，省掉技术可行性分析 [来源:french-exit @2026-05-22] |  |
 | | **从 SOP 模板采纳更新时，必须逐字核对关键字段，不要凭记忆改写**。本轮将 `vibe-coding-project-sop/AGENTS.md` 中的触发词「存档」错误抄写为「存储」，原因是未逐字比对就按直觉填写。SOP 模板中的占位符（如 `[项目名]`）在实际项目中需替换，但硬规则（触发词、流程步骤）应原样保留。 [来源:french-exit @2026-05-22] |  |
 | | **`tauri::AppHandle` 出现在 `async fn` 签名中 + MinGW = `STATUS_ENTRYPOINT_NOT_FOUND`**。原因未知（PE 导入表生成 bug？），但 workaround 明确：把这些函数拆到子模块，用 `#[cfg(not(test))]` 条件编译，测试模式下不链接 [来源:french-exit @2026-05-22] |  |
+
+| 95 | 在 Kimi Code CLI 上安装 Superpowers 需分 A/B 方案：A 方案替换 CLI 为 feat/hook-inject-prompt 分支实现自动注入；B 方案只克隆 skills 到 ~/.kimi/skills/ 手动调用，零风险 | 工具链配置 | [来源:vibe-coding-project-sop @2026-05-22] |
+| 96 | 评估 skill 是否适合当前项目时，不应只看功能描述，而应对比项目形态（纯文档/工具型项目不需要 frontend-design 等前端实现型 skill） | 项目评估 | [来源:vibe-coding-project-sop @2026-05-22] |

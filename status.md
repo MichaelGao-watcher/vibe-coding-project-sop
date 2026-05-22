@@ -27,6 +27,7 @@
 ### 优先级 2 — 功能
 - [x] 为 `lessons-learned.md` 增加标签/分类系统 ✅（94 条经验已打标，新增 anti-patterns-checklist.md 模板）
 - [ ] 为 troubleshooting 增加搜索索引（按关键词快速定位）
+- [ ] 试用已安装的 Superpowers skills（brainstorming / systematic-debugging / test-driven-development），评估是否融入 vibe-sop 工作流
 
 ### 优先级 3 — 优化
 - [ ] 脚本增加 `--dry-run` 模式，预览变更但不写入
@@ -114,3 +115,5 @@ vibe-coding-project-sop/
 - **进度总览**：更新各模块状态图标
 - **待办**：勾选已完成项，新增下轮待办
 - **更新记录**：追加本轮更新摘要
+
+| 2026-05-22 | 修复恢复指令增加 git pull 步骤；安装 Superpowers B 方案（14 skills 符号链接 + Kimi 适配 patch）；将跨项目知识同步机制完整写入 blindfold-chess（config/github-sync.json、scripts/sync-knowledge.py、AGENTS.md RULE-07、存档/恢复/同步知识触发词、lessons-learned/troubleshooting 来源格式标准化） |

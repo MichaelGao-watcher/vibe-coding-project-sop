@@ -57,3 +57,30 @@
 **遗留问题 / 下轮开始点**：
 - qianniu_business_analytics 的 docs/design.md / docs/brief.md / prompt.md 待补全
 - 母库 P2/P3 待办（搜索索引、--dry-run、--since）尚未启动
+
+---
+
+## 2026-05-22
+
+**会话类型**：基础设施完善 + 跨项目知识同步机制部署
+
+**完成内容**：
+1. 恢复指令修复：AGENTS.md 3.6 增加 `git pull` 步骤（用户指出后修复）
+2. Superpowers B 方案安装：
+   - 克隆 obra/superpowers 到 ~/.kimi/superpowers/
+   - 创建 14 个 skills 符号链接到 ~/.kimi/skills/
+   - Patch using-superpowers/SKILL.md 适配 Kimi Code CLI（ReadFile 调用方式）
+   - 向用户解释调用方式、对工作流的影响、回滚方法
+3. 用户决定暂不启用 Superpowers，待明天试用
+4. 评估 frontend-design skill：当前项目无前端 UI，用不上，但"避免 generic output"理念可借鉴
+5. 将"拉取母库"全套逻辑写入 blindfold-chess 项目：
+   - 新增 config/github-sync.json、scripts/sync-knowledge.py
+   - AGENTS.md 新增 RULE-07、存档确认流程、恢复 git pull、同步知识触发词
+   - lessons-learned.md / troubleshooting.md 增加来源标注格式
+   - 首次同步因 GitHub API rate limit 未执行（需配置 token）
+
+**评估结论**：blindfold-chess 文档骨架完整，缺失的跨项目知识同步机制已全部补齐。
+
+**遗留问题/下轮开始点**：
+- 用户明天计划试用 Superpowers skills（已写入 status.md 待办）
+- blindfold-chess 需配置 GitHub token 后运行首次母库同步
