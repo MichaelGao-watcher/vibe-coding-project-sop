@@ -108,3 +108,40 @@
 **遗留问题/下轮开始点**：
 - 防火墙规则需首次以管理员身份运行 start-llm-server.ps1 添加
 - 老设备 IP 变动时需更新 macbook-connect.md
+
+
+---
+
+## 2026-05-23
+
+**会话类型**：macOS 新设备接入 + Hermes Agent 配置 + DeepSeek 模型升级
+
+**完成内容**：
+1. macOS 端恢复流程：读取 `status.md` 和 `session-log.md`，汇报当前状态
+2. 确认用户意图：只想了解老设备 LLM 连接问题，场景一/二/三已解决
+3. Hermes Agent 安装与配置（pipx 方案）：
+   - 通过 `uv tool install pipx` 安装 pipx（无 Homebrew）
+   - `pipx install hermes-agent` → v0.14.0
+   - 配置 custom provider 指向老设备 `192.168.18.122:11434`
+4. 两个必要 patch（解决 llama.cpp 兼容性）：
+   - `agent/model_metadata.py`: `MINIMUM_CONTEXT_LENGTH` 64K → 32K（0.5B 模型只有 32K 上下文）
+   - `agent/transports/chat_completions.py`: 强制移除 `tools` + 强制 `stream=False`（llama.cpp 不支持 streaming+tools）
+5. Hermes 成功调用老设备 LLM，返回中文回复（非 stream 模式，1 分 41 秒）
+6. 将 `~/.local/bin` 加入 `~/.bashrc` PATH，确保新开终端可直接运行 `hermes`
+7. 更新 `llm-server/` 文件准备切换 DeepSeek 模型：
+   - `start-llm-server.ps1`：模型路径改为 `deepseek-r1-distill-qwen-1.5b.Q4_K_M.gguf`
+   - `macbook-connect.md`：模型名称和工具配置更新
+   - `README.md`：服务信息更新
+8. macOS 端 Hermes `config.yaml` 模型名更新为 DeepSeek
+9. `status.md` 新增「老设备接力」待办清单，含完整 PowerShell 命令
+10. 还原 `MINIMUM_CONTEXT_LENGTH` patch（DeepSeek 1.5B 有 128K 上下文，满足 64K 限制）
+
+**关键决策**：
+- 老设备 8GB 内存只能稳妥运行 1.5B 模型（7B 会内存吃紧 + 速度极慢）
+- Hermes 的两个 transport patch 必须保留（llama.cpp server 的 OpenAI API 不支持 tools + streaming）
+
+**遗留问题 / 下轮开始点**：
+- **老设备端**：`git pull` → 下载 DeepSeek 模型 → 停止旧服务 → 运行 `start-llm-server.ps1`
+  - 操作指令已写入 `status.md`「老设备接力」待办清单
+  - 用户在老设备上说「恢复」后，AI 读取 status.md 按清单执行
+- macOS 端验证：Hermes 连通性测试（`hermes chat --query "你好"`）

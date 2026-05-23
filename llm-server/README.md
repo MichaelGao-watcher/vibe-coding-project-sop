@@ -50,10 +50,10 @@ export OPENAI_BASE_URL="http://192.168.18.122:11434/v1"
 
 | 项目 | 值 |
 |------|-----|
-| 模型 | Qwen2.5-0.5B-Instruct (Q4_K_M) |
+| 模型 | DeepSeek-R1-Distill-Qwen-1.5B (Q4_K_M) |
 | 本机 IP | `192.168.18.122` |
 | API 端点 | `http://192.168.18.122:11434/v1` |
-| 推理速度 | 约 20 tokens/s（纯 CPU） |
+| 推理速度 | 约 8-15 tokens/s（纯 CPU，1.5B 模型） |
 
 ---
 

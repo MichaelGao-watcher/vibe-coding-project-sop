@@ -33,6 +33,26 @@
 - [ ] 脚本增加 `--dry-run` 模式，预览变更但不写入
 - [ ] 脚本增加 `--since` 参数，只同步某日期后的新增内容
 
+### 老设备接力 — 待执行（Windows i7-7500U）
+> 用户说「恢复」后，AI 按以下清单执行。macOS 端已完成 `llm-server/` 文件更新并已 push。
+
+- [ ] `git pull` 拉取最新 `llm-server/start-llm-server.ps1`
+- [ ] 下载 DeepSeek-R1-Distill-Qwen-1.5B Q4_K_M GGUF 模型（~0.8GB）到 `$env:TEMP`
+- [ ] 停止当前 `llama-server` 进程
+- [ ] 以管理员身份运行 `start-llm-server.ps1` 启动新模型
+- [ ] 验证：`curl http://192.168.18.122:11434/v1/models` 返回 DeepSeek 模型名
+
+```powershell
+# 下载命令
+$ModelUrl = "https://huggingface.co/kakajiang/DeepSeek-R1-Distill-Qwen-1.5B-GGUF/resolve/main/deepseek-r1-distill-qwen-1.5b.Q4_K_M.gguf"
+Invoke-WebRequest -Uri $ModelUrl -OutFile "$env:TEMP\deepseek-r1-distill-qwen-1.5b.Q4_K_M.gguf" -UseBasicParsing
+
+# 重启服务
+Get-Process -Name "llama-server" -ErrorAction SilentlyContinue | Stop-Process -Force
+cd "D:\Vibe-Code\vibe-coding-project-sop\llm-server"
+.\start-llm-server.ps1
+```
+
 ---
 
 ## 技术债务 🏚️

@@ -6,7 +6,7 @@
 | **服务** | llama.cpp server |
 | **IP** | `192.168.18.122` |
 | **端口** | `11434` |
-| **模型** | Qwen2.5-0.5B-Instruct (Q4_K_M) |
+| **模型** | DeepSeek-R1-Distill-Qwen-1.5B (Q4_K_M) |
 | **API 格式** | OpenAI Compatible |
 
 ## 通用环境变量
@@ -19,7 +19,7 @@ export OPENAI_BASE_URL="http://192.168.18.122:11434/v1"
 
 ### aider（AI 编程助手）
 ```bash
-aider --model openai/qwen2.5-0.5b-q4_k_m.gguf \
+aider --model openai/deepseek-r1-distill-qwen-1.5b.Q4_K_M.gguf \
   --api-key dummy \
   --openai-api-base http://192.168.18.122:11434/v1
 ```
@@ -30,9 +30,9 @@ aider --model openai/qwen2.5-0.5b-q4_k_m.gguf \
 {
   "models": [
     {
-      "title": "Local Qwen2.5",
+      "title": "Local DeepSeek-R1",
       "provider": "openai",
-      "model": "qwen2.5-0.5b-q4_k_m.gguf",
+      "model": "deepseek-r1-distill-qwen-1.5b.Q4_K_M.gguf",
       "apiBase": "http://192.168.18.122:11434/v1",
       "apiKey": "dummy"
     }
@@ -50,7 +50,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="qwen2.5-0.5b-q4_k_m.gguf",
+    model="deepseek-r1-distill-qwen-1.5b.Q4_K_M.gguf",
     messages=[{"role": "user", "content": "Hello"}]
 )
 print(response.choices[0].message.content)
@@ -63,6 +63,6 @@ curl http://192.168.18.122:11434/health
 ```
 
 ## 注意事项
-- 老设备无独立 GPU，纯 CPU 推理，速度约 20 tokens/s（0.5B 模型）
+- 老设备无独立 GPU，纯 CPU 推理，速度约 8-15 tokens/s（1.5B 模型，纯 CPU）
 - 8GB 内存限制，建议只运行这一个模型服务
 - 如需重启服务，在老设备上运行 `start-llm-server.ps1`

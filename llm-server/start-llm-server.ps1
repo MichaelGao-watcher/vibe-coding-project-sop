@@ -1,7 +1,7 @@
 ﻿# 老设备 LLM 服务启动脚本
 # 以管理员身份运行 PowerShell 后执行（首次运行需要添加防火墙规则）
 
-$ModelPath = "$env:TEMP\qwen2.5-0.5b-q4_k_m.gguf"
+$ModelPath = "$env:TEMP\deepseek-r1-distill-qwen-1.5b.Q4_K_M.gguf"
 $ServerExe = "$env:TEMP\llama-cpp\llama-server.exe"
 $Port = 11434
 
@@ -54,7 +54,7 @@ if (-not $existingRule) {
 $ip = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -notmatch "^127\." -and $_.IPAddress -notmatch "^169\.254" } | Select-Object -First 1).IPAddress
 Write-Host ""
 Write-Host "=== 服务信息 ===" -ForegroundColor Cyan
-Write-Host "  模型: Qwen2.5-0.5B-Instruct (Q4_K_M)"
+Write-Host "  模型: DeepSeek-R1-Distill-Qwen-1.5B (Q4_K_M)"
 Write-Host "  本机 IP: $ip"
 Write-Host "  API 端点: http://${ip}:$Port/v1/chat/completions"
 Write-Host "  模型列表: http://${ip}:$Port/v1/models"
