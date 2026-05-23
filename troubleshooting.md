@@ -268,3 +268,21 @@
 | **现象** | `gh auth login` 报错 `Post "https://github.com/login/device/code": read tcp ...: read: operation timed out` |
 | **原因** | `gh` 底层是 Go 程序，默认直连 GitHub API，不走系统代理。国内网络环境下 GitHub API 可能超时 |
 | **解决** | 设置环境变量后运行：`HTTPS_PROXY=http://127.0.0.1:7897 HTTP_PROXY=http://127.0.0.1:7897 gh auth login` |
+
+### HuggingFace 模型下载连接超时 `curl: (28) Could not connect to server` [来源:vibe-coding-project-sop @2026-05-24]
+
+| | 内容 |
+|---|---|
+| **状态** | 已解决 |
+| **现象** | `curl https://huggingface.co/.../resolve/main/...gguf` 长时间无响应后报错 `Failed to connect to huggingface.co port 443 after 21073 ms` |
+| **原因** | 国内网络环境下 HuggingFace 主站被墙或 DNS 污染 |
+| **解决** | 改用国内镜像源：ModelScope（`https://modelscope.cn/models/<namespace>/<model>/resolve/master/<file>.gguf`），实测速度 2.5MB/s+ |
+
+### PowerShell 添加防火墙规则权限不足 `Access is denied` [来源:vibe-coding-project-sop @2026-05-24]
+
+| | 内容 |
+|---|---|
+| **状态** | 已知限制 |
+| **现象** | 非管理员身份运行 `start-llm-server.ps1` 时，`New-NetFirewallRule` 报错 `Access is denied` |
+| **原因** | Windows 防火墙规则修改需要管理员权限 |
+| **解决** | 1. 以管理员身份运行一次 PowerShell 执行脚本，添加规则后后续无需管理员<br>2. 或手动在 Windows 防火墙高级设置中添加 11434 TCP 入站规则 |

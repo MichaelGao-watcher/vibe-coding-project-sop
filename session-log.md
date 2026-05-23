@@ -172,3 +172,28 @@
 
 **遗留问题 / 下轮开始点**：
 - 无。push 通路已恢复，可正常使用 `git push`
+
+---
+
+## 2026-05-24
+
+**会话类型**：老设备接力清单执行
+
+**完成内容**：
+1. 执行恢复摘要，确认当前在 Windows 老设备端
+2. `git pull` — 已是最新
+3. 下载 DeepSeek-R1-Distill-Qwen-1.5B Q4_K_M GGUF 模型：
+   - HuggingFace 直接连接超时（21秒无响应）
+   - hf-mirror.com 返回 404
+   - 改用 ModelScope CDN 成功，1.1GB / 6分19秒 / 平均 2.8MB/s
+4. 停止旧 llama-server 进程（Qwen2.5-0.5B）
+5. PowerShell 运行 `start-llm-server.ps1` 启动新模型
+6. API 验证通过：`/v1/models` 返回 DeepSeek 模型信息，`/health` 返回 ok
+
+**关键决策**：
+- HuggingFace 国内不可达时，优先 fallback 到 ModelScope 而非 hf-mirror（后者可能 404）
+- 非管理员运行 PowerShell 脚本时，llama-server 本身可正常启动，仅防火墙规则添加失败（非阻塞）
+
+**遗留问题 / 下轮开始点**：
+- 防火墙规则需首次以管理员身份运行 `start-llm-server.ps1` 添加
+- macOS 端 Hermes 连通性验证：`hermes chat --query "你好"`

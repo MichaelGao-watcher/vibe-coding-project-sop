@@ -166,3 +166,7 @@
 | 101 | macOS 无 Homebrew 时，GitHub CLI 可直接下载官方 zip 包，解压后放到 `~/bin/` 即可使用，无需 sudo | 工具链配置 | [来源:vibe-coding-project-sop @2026-05-23] |
 | 102 | `gh` 底层是 Go 程序，默认不走系统代理。访问 GitHub API 时必须显式设置 `HTTPS_PROXY` 环境变量 | 网络诊断 | [来源:vibe-coding-project-sop @2026-05-23] |
 | 103 | 从 SSH 协议切换到 HTTPS + `gh auth setup-git` 后，`git push` 完全由 gh 管理的 Token 驱动，无需维护 SSH 密钥对 | 工具链配置 | [来源:vibe-coding-project-sop @2026-05-23] |
+
+| 104 | TAG:build-env | INFO | Git for Windows 的 bash `/tmp` 与 PowerShell `$env:TEMP` 指向同一物理目录（`C:\Users\<user>\AppData\Local\Temp`），跨 shell 操作文件无需移动 | 环境兼容 | [来源:vibe-coding-project-sop @2026-05-24] |
+| 105 | TAG:build-env | INFO | 国内下载 HuggingFace 模型时，ModelScope 是比 hf-mirror 更可靠的 fallback（后者可能 404 或同步延迟） | 网络诊断 | [来源:vibe-coding-project-sop @2026-05-24] |
+| 106 | TAG:build-env | WARNING | Windows 非管理员运行 PowerShell 脚本时，`New-NetFirewallRule` 会失败，但 `llama-server` 本身可正常启动；首次运行需提升权限 | 环境兼容 | [来源:vibe-coding-project-sop @2026-05-24] |

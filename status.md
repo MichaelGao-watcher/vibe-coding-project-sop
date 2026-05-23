@@ -36,11 +36,11 @@
 ### 老设备接力 — 待执行（Windows i7-7500U）
 > 用户说「恢复」后，AI 按以下清单执行。macOS 端已完成 `llm-server/` 文件更新并已 push。
 
-- [ ] `git pull` 拉取最新 `llm-server/start-llm-server.ps1`
-- [ ] 下载 DeepSeek-R1-Distill-Qwen-1.5B Q4_K_M GGUF 模型（~0.8GB）到 `$env:TEMP`
-- [ ] 停止当前 `llama-server` 进程
-- [ ] 以管理员身份运行 `start-llm-server.ps1` 启动新模型
-- [ ] 验证：`curl http://192.168.18.122:11434/v1/models` 返回 DeepSeek 模型名
+- [x] `git pull` 拉取最新 `llm-server/start-llm-server.ps1` ✅
+- [x] 下载 DeepSeek-R1-Distill-Qwen-1.5B Q4_K_M GGUF 模型（~1.1GB）到 `$env:TEMP` ✅（HuggingFace 超时，改用 ModelScope 成功）
+- [x] 停止当前 `llama-server` 进程 ✅
+- [x] 以管理员身份运行 `start-llm-server.ps1` 启动新模型 ✅
+- [x] 验证：`curl http://192.168.18.122:11434/v1/models` 返回 DeepSeek 模型名 ✅
 
 ```powershell
 # 下载命令
