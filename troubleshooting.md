@@ -247,3 +247,24 @@
 | **原因** | PowerShell 5.1 默认以 Windows-1252 编码读取无 BOM 的 UTF-8 文件，中文字符被错误解码后破坏了字符串引号匹配，导致解析器认为 `}` 位置不对 |
 | **解决** | 给脚本文件添加 UTF-8 BOM（文件头添加字节 EF BB BF）：`printf '\xef\xbb\xbf' > file.ps1 && cat original.ps1 >> file.ps1` |
 | **注意** | PowerShell 7+ 默认支持 UTF-8 无 BOM，但 Windows 10 自带的 PowerShell 5.1 仍受此限制 |
+
+
+---
+
+### GitHub push 报错 `Permission denied (publickey)` [来源:vibe-coding-project-sop @2026-05-23]
+
+| | 内容 |
+|---|---|
+| **状态** | 已修复 |
+| **现象** | `git push` 失败，`ssh -T git@github.com` 返回 `Permission denied (publickey)` |
+| **原因** | 1. SSH agent 未加载私钥（`ssh-add -l` 显示 `no identities`）<br>2. GitHub 账户未添加对应公钥 |
+| **解决** | 方案 A（SSH）：`ssh-add ~/.ssh/id_ed25519`，将公钥添加到 GitHub Settings → SSH Keys<br>方案 B（推荐）：改用 HTTPS + GitHub CLI 管理凭证（见下方 `gh auth login` 条目） |
+
+### `gh auth login` 超时：`read tcp ... operation timed out` [来源:vibe-coding-project-sop @2026-05-23]
+
+| | 内容 |
+|---|---|
+| **状态** | 已修复 |
+| **现象** | `gh auth login` 报错 `Post "https://github.com/login/device/code": read tcp ...: read: operation timed out` |
+| **原因** | `gh` 底层是 Go 程序，默认直连 GitHub API，不走系统代理。国内网络环境下 GitHub API 可能超时 |
+| **解决** | 设置环境变量后运行：`HTTPS_PROXY=http://127.0.0.1:7897 HTTP_PROXY=http://127.0.0.1:7897 gh auth login` |

@@ -129,6 +129,18 @@
 | **后果** | 新用户发现复盘功能的成本略微提高（需先打开设置面板），但老用户熟悉后无影响 |
 | **可逆性** | 高。随时可在首页加回复盘卡片 |
 
+## ADR-017：GitHub 认证从 SSH 切换到 GitHub CLI + HTTPS [来源:vibe-coding-project-sop @2026-05-23]
+
+| 字段 | 内容 |
+|------|------|
+| **日期** | 2026-05-23 |
+| **问题** | GitHub push 因 SSH 密钥问题失败（Permission denied publickey），如何修复？ |
+| **候选方案** | A. 修复 SSH：加载密钥 + 添加公钥到 GitHub 账户<br>B. 切换到 GitHub CLI + HTTPS 协议，由 gh 管理 Token 认证 |
+| **决策** | 方案 B：安装 GitHub CLI，使用 `gh auth login` 登录，`gh auth setup-git` 配置凭证助手，git 远程 URL 改为 HTTPS |
+| **理由** | 1. 用户明确表示不走 SSH 密钥路<br>2. `gh` 自动管理 Personal Access Token，无需手动生成和配置<br>3. HTTPS 走已配置的 HTTP 代理（127.0.0.1:7897），网络通路更稳定<br>4. 一次登录后长期有效，Token 自动刷新 |
+| **后果** | 远程 URL 从 `git@github.com:...` 改为 `https://github.com/.../...`，所有本地仓库需同步切换 |
+| **可逆性** | 可逆。随时可切回 SSH：`git remote set-url origin git@github.com:...` |
+
 *新增决策时复制上方模板，填写后追加到文件末尾。*
 ---
 

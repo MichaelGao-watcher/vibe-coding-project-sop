@@ -163,3 +163,6 @@
 | 98 | ModelScope 首页 HTTP 访问速度（~8KB/s）与实际 CDN 模型下载速度（~2.5MB/s）差异巨大，下载 .gguf 模型文件时应直接测试 CDN 链接而非首页 | 网络诊断 | [来源:vibe-coding-project-sop @2026-05-22] |
 | 99 | GitHub 下载完全不可达时，可尝试加速镜像 gh.llkk.cc，实测速度 300KB/s+，支持断点续传 | 网络诊断 | [来源:vibe-coding-project-sop @2026-05-22] |
 | 100 | llama.cpp 的 server 模式兼容 OpenAI API 格式（/v1/chat/completions），可直接作为 Ollama 的轻量替代，体积仅 18MB vs Ollama 2GB | 工具选型 | [来源:vibe-coding-project-sop @2026-05-22] |
+| 101 | macOS 无 Homebrew 时，GitHub CLI 可直接下载官方 zip 包，解压后放到 `~/bin/` 即可使用，无需 sudo | 工具链配置 | [来源:vibe-coding-project-sop @2026-05-23] |
+| 102 | `gh` 底层是 Go 程序，默认不走系统代理。访问 GitHub API 时必须显式设置 `HTTPS_PROXY` 环境变量 | 网络诊断 | [来源:vibe-coding-project-sop @2026-05-23] |
+| 103 | 从 SSH 协议切换到 HTTPS + `gh auth setup-git` 后，`git push` 完全由 gh 管理的 Token 驱动，无需维护 SSH 密钥对 | 工具链配置 | [来源:vibe-coding-project-sop @2026-05-23] |

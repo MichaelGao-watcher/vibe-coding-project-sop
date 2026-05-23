@@ -1,0 +1,191 @@
+From 51d68cff3084f30220247803a96f030b21abba19 Mon Sep 17 00:00:00 2001
+From: MichaeGaol <michael@MichaeldeMacBook-Air.local>
+Date: Sat, 23 May 2026 20:31:55 +0800
+Subject: [PATCH] =?UTF-8?q?[llm-server]=20=E5=88=87=E6=8D=A2=E6=A8=A1?=
+ =?UTF-8?q?=E5=9E=8B=E5=88=B0=20DeepSeek-R1-Distill-Qwen-1.5B?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- start-llm-server.ps1: 模型路径改为 deepseek-r1-distill-qwen-1.5b.Q4_K_M.gguf
+- macbook-connect.md: 模型名称和工具配置更新
+- README.md: 服务信息更新
+- status.md: 新增老设备接力待办清单（含 PowerShell 下载/重启命令）
+- session-log.md: 追加本轮会话记录（Hermes 配置 + DeepSeek 升级）
+---
+ llm-server/README.md            |  4 ++--
+ llm-server/macbook-connect.md   | 12 +++++------
+ llm-server/start-llm-server.ps1 |  4 ++--
+ session-log.md                  | 37 +++++++++++++++++++++++++++++++++
+ status.md                       | 20 ++++++++++++++++++
+ 5 files changed, 67 insertions(+), 10 deletions(-)
+
+diff --git a/llm-server/README.md b/llm-server/README.md
+index 8358185..16d8412 100644
+--- a/llm-server/README.md
++++ b/llm-server/README.md
+@@ -50,10 +50,10 @@ export OPENAI_BASE_URL="http://192.168.18.122:11434/v1"
+ 
+ | 项目 | 值 |
+ |------|-----|
+-| 模型 | Qwen2.5-0.5B-Instruct (Q4_K_M) |
++| 模型 | DeepSeek-R1-Distill-Qwen-1.5B (Q4_K_M) |
+ | 本机 IP | `192.168.18.122` |
+ | API 端点 | `http://192.168.18.122:11434/v1` |
+-| 推理速度 | 约 20 tokens/s（纯 CPU） |
++| 推理速度 | 约 8-15 tokens/s（纯 CPU，1.5B 模型） |
+ 
+ ---
+ 
+diff --git a/llm-server/macbook-connect.md b/llm-server/macbook-connect.md
+index e478db4..24253f0 100644
+--- a/llm-server/macbook-connect.md
++++ b/llm-server/macbook-connect.md
+@@ -6,7 +6,7 @@
+ | **服务** | llama.cpp server |
+ | **IP** | `192.168.18.122` |
+ | **端口** | `11434` |
+-| **模型** | Qwen2.5-0.5B-Instruct (Q4_K_M) |
++| **模型** | DeepSeek-R1-Distill-Qwen-1.5B (Q4_K_M) |
+ | **API 格式** | OpenAI Compatible |
+ 
+ ## 通用环境变量
+@@ -19,7 +19,7 @@ export OPENAI_BASE_URL="http://192.168.18.122:11434/v1"
+ 
+ ### aider（AI 编程助手）
+ ```bash
+-aider --model openai/qwen2.5-0.5b-q4_k_m.gguf \
++aider --model openai/deepseek-r1-distill-qwen-1.5b.Q4_K_M.gguf \
+   --api-key dummy \
+   --openai-api-base http://192.168.18.122:11434/v1
+ ```
+@@ -30,9 +30,9 @@ aider --model openai/qwen2.5-0.5b-q4_k_m.gguf \
+ {
+   "models": [
+     {
+-      "title": "Local Qwen2.5",
++      "title": "Local DeepSeek-R1",
+       "provider": "openai",
+-      "model": "qwen2.5-0.5b-q4_k_m.gguf",
++      "model": "deepseek-r1-distill-qwen-1.5b.Q4_K_M.gguf",
+       "apiBase": "http://192.168.18.122:11434/v1",
+       "apiKey": "dummy"
+     }
+@@ -50,7 +50,7 @@ client = OpenAI(
+ )
+ 
+ response = client.chat.completions.create(
+-    model="qwen2.5-0.5b-q4_k_m.gguf",
++    model="deepseek-r1-distill-qwen-1.5b.Q4_K_M.gguf",
+     messages=[{"role": "user", "content": "Hello"}]
+ )
+ print(response.choices[0].message.content)
+@@ -63,6 +63,6 @@ curl http://192.168.18.122:11434/health
+ ```
+ 
+ ## 注意事项
+-- 老设备无独立 GPU，纯 CPU 推理，速度约 20 tokens/s（0.5B 模型）
++- 老设备无独立 GPU，纯 CPU 推理，速度约 8-15 tokens/s（1.5B 模型，纯 CPU）
+ - 8GB 内存限制，建议只运行这一个模型服务
+ - 如需重启服务，在老设备上运行 `start-llm-server.ps1`
+diff --git a/llm-server/start-llm-server.ps1 b/llm-server/start-llm-server.ps1
+index 36928f0..019f0c0 100644
+--- a/llm-server/start-llm-server.ps1
++++ b/llm-server/start-llm-server.ps1
+@@ -1,7 +1,7 @@
+ ﻿# 老设备 LLM 服务启动脚本
+ # 以管理员身份运行 PowerShell 后执行（首次运行需要添加防火墙规则）
+ 
+-$ModelPath = "$env:TEMP\qwen2.5-0.5b-q4_k_m.gguf"
++$ModelPath = "$env:TEMP\deepseek-r1-distill-qwen-1.5b.Q4_K_M.gguf"
+ $ServerExe = "$env:TEMP\llama-cpp\llama-server.exe"
+ $Port = 11434
+ 
+@@ -54,7 +54,7 @@ if (-not $existingRule) {
+ $ip = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -notmatch "^127\." -and $_.IPAddress -notmatch "^169\.254" } | Select-Object -First 1).IPAddress
+ Write-Host ""
+ Write-Host "=== 服务信息 ===" -ForegroundColor Cyan
+-Write-Host "  模型: Qwen2.5-0.5B-Instruct (Q4_K_M)"
++Write-Host "  模型: DeepSeek-R1-Distill-Qwen-1.5B (Q4_K_M)"
+ Write-Host "  本机 IP: $ip"
+ Write-Host "  API 端点: http://${ip}:$Port/v1/chat/completions"
+ Write-Host "  模型列表: http://${ip}:$Port/v1/models"
+diff --git a/session-log.md b/session-log.md
+index f0c8378..3f65c24 100644
+--- a/session-log.md
++++ b/session-log.md
+@@ -108,3 +108,40 @@
+ **遗留问题/下轮开始点**：
+ - 防火墙规则需首次以管理员身份运行 start-llm-server.ps1 添加
+ - 老设备 IP 变动时需更新 macbook-connect.md
++
++
++---
++
++## 2026-05-23
++
++**会话类型**：macOS 新设备接入 + Hermes Agent 配置 + DeepSeek 模型升级
++
++**完成内容**：
++1. macOS 端恢复流程：读取 `status.md` 和 `session-log.md`，汇报当前状态
++2. 确认用户意图：只想了解老设备 LLM 连接问题，场景一/二/三已解决
++3. Hermes Agent 安装与配置（pipx 方案）：
++   - 通过 `uv tool install pipx` 安装 pipx（无 Homebrew）
++   - `pipx install hermes-agent` → v0.14.0
++   - 配置 custom provider 指向老设备 `192.168.18.122:11434`
++4. 两个必要 patch（解决 llama.cpp 兼容性）：
++   - `agent/model_metadata.py`: `MINIMUM_CONTEXT_LENGTH` 64K → 32K（0.5B 模型只有 32K 上下文）
++   - `agent/transports/chat_completions.py`: 强制移除 `tools` + 强制 `stream=False`（llama.cpp 不支持 streaming+tools）
++5. Hermes 成功调用老设备 LLM，返回中文回复（非 stream 模式，1 分 41 秒）
++6. 将 `~/.local/bin` 加入 `~/.bashrc` PATH，确保新开终端可直接运行 `hermes`
++7. 更新 `llm-server/` 文件准备切换 DeepSeek 模型：
++   - `start-llm-server.ps1`：模型路径改为 `deepseek-r1-distill-qwen-1.5b.Q4_K_M.gguf`
++   - `macbook-connect.md`：模型名称和工具配置更新
++   - `README.md`：服务信息更新
++8. macOS 端 Hermes `config.yaml` 模型名更新为 DeepSeek
++9. `status.md` 新增「老设备接力」待办清单，含完整 PowerShell 命令
++10. 还原 `MINIMUM_CONTEXT_LENGTH` patch（DeepSeek 1.5B 有 128K 上下文，满足 64K 限制）
++
++**关键决策**：
++- 老设备 8GB 内存只能稳妥运行 1.5B 模型（7B 会内存吃紧 + 速度极慢）
++- Hermes 的两个 transport patch 必须保留（llama.cpp server 的 OpenAI API 不支持 tools + streaming）
++
++**遗留问题 / 下轮开始点**：
++- **老设备端**：`git pull` → 下载 DeepSeek 模型 → 停止旧服务 → 运行 `start-llm-server.ps1`
++  - 操作指令已写入 `status.md`「老设备接力」待办清单
++  - 用户在老设备上说「恢复」后，AI 读取 status.md 按清单执行
++- macOS 端验证：Hermes 连通性测试（`hermes chat --query "你好"`）
+diff --git a/status.md b/status.md
+index 6e192f3..9d5b90a 100644
+--- a/status.md
++++ b/status.md
+@@ -33,6 +33,26 @@
+ - [ ] 脚本增加 `--dry-run` 模式，预览变更但不写入
+ - [ ] 脚本增加 `--since` 参数，只同步某日期后的新增内容
+ 
++### 老设备接力 — 待执行（Windows i7-7500U）
++> 用户说「恢复」后，AI 按以下清单执行。macOS 端已完成 `llm-server/` 文件更新并已 push。
++
++- [ ] `git pull` 拉取最新 `llm-server/start-llm-server.ps1`
++- [ ] 下载 DeepSeek-R1-Distill-Qwen-1.5B Q4_K_M GGUF 模型（~0.8GB）到 `$env:TEMP`
++- [ ] 停止当前 `llama-server` 进程
++- [ ] 以管理员身份运行 `start-llm-server.ps1` 启动新模型
++- [ ] 验证：`curl http://192.168.18.122:11434/v1/models` 返回 DeepSeek 模型名
++
++```powershell
++# 下载命令
++$ModelUrl = "https://huggingface.co/kakajiang/DeepSeek-R1-Distill-Qwen-1.5B-GGUF/resolve/main/deepseek-r1-distill-qwen-1.5b.Q4_K_M.gguf"
++Invoke-WebRequest -Uri $ModelUrl -OutFile "$env:TEMP\deepseek-r1-distill-qwen-1.5b.Q4_K_M.gguf" -UseBasicParsing
++
++# 重启服务
++Get-Process -Name "llama-server" -ErrorAction SilentlyContinue | Stop-Process -Force
++cd "D:\Vibe-Code\vibe-coding-project-sop\llm-server"
++.\start-llm-server.ps1
++```
++
+ ---
+ 
+ ## 技术债务 🏚️
+-- 
+2.50.1 (Apple Git-155)
+
