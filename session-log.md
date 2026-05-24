@@ -197,3 +197,33 @@
 **遗留问题 / 下轮开始点**：
 - 防火墙规则需首次以管理员身份运行 `start-llm-server.ps1` 添加
 - macOS 端 Hermes 连通性验证：`hermes chat --query "你好"`
+
+---
+
+## 2026-05-24
+
+**会话类型**：P2 功能开发 — troubleshooting 搜索索引
+
+**完成内容**：
+1. 编写 `scripts/build-troubleshooting-index.py`（~160 行）
+   - 解析 `troubleshooting.md` 的 Markdown 结构（分类、条目、表格字段）
+   - 提取 27 个条目的关键词、来源、状态、行号
+   - 技术栈推断：Rust/Tauri、JS/React、AI 工具链、GitHub、网络/环境、Windows、Chess
+2. 生成 `troubleshooting-index.md`（110 行）
+   - 快速搜索表：关键词 | 分类 | 来源 | 状态 | 行号链接
+   - 按技术栈分组视图，支持一个条目多分组
+3. 修复脚本问题
+   - 空分类条目显示为 "未分类"
+   - URL 去重避免域名中的技术关键词误匹配（如 blindfold-chess 中的 chess 被误认为 Chess/引擎）
+4. 更新 `status.md`：勾选 P2 待办，追加更新记录
+5. 更新 `AGENTS.md`：恢复指令 3.6 节改为「先读索引，再读详情」
+
+**关键决策**：
+- 索引采用**独立文件**（`troubleshooting-index.md`）而非插入同文件顶部
+  - 理由：AI 读取成本低（~110 行 vs 288 行）、零内容污染、行号链接可靠
+- 定位使用**行号链接**（`troubleshooting.md#L8`）而非标题锚点
+  - 理由：GitHub 对中文标题的锚点生成算法不稳定，行号 100% 可靠且脚本重建时自动更新
+
+**遗留问题 / 下轮开始点**：
+- 技术栈映射为启发式硬编码，未来可扩展为模糊匹配或 LLM 辅助分类
+- 考虑将索引重建集成到 `sync-knowledge.py` 作为同步后自动钩子

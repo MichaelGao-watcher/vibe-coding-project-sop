@@ -26,7 +26,7 @@
 
 ### 优先级 2 — 功能
 - [x] 为 `lessons-learned.md` 增加标签/分类系统 ✅（94 条经验已打标，新增 anti-patterns-checklist.md 模板）
-- [ ] 为 troubleshooting 增加搜索索引（按关键词快速定位）
+- [x] 为 troubleshooting 增加搜索索引（按关键词快速定位） ✅（27 条问题已索引，自动生成 `troubleshooting-index.md`，技术栈分组视图）
 - [ ] 试用已安装的 Superpowers skills（brainstorming / systematic-debugging / test-driven-development），评估是否融入 vibe-sop 工作流
 
 ### 优先级 3 — 优化

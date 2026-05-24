@@ -388,3 +388,27 @@
 - 整理所有相关文件到 llm-server/ 目录
 
 **后果**：老设备成功运行局域网 LLM 服务，推理速度约 20 tokens/s（纯 CPU），MacBook Air 可通过标准 OpenAI API 客户端连接。
+
+## ADR-009：Troubleshooting 索引采用独立文件 + 行号链接
+
+**日期**：2026-05-24
+**状态**：已采纳
+**上下文**：troubleshooting.md 已达 288 行/27 条目，AI 恢复时按关键词搜索效率低，且难以获取技术栈全景。
+
+**决策**：
+1. 创建 `scripts/build-troubleshooting-index.py` 自动生成 `troubleshooting-index.md`
+2. 索引为独立文件，不插入 troubleshooting.md 顶部
+3. 定位使用行号链接 `troubleshooting.md#L{line}`
+
+**考量**：
+
+| 方案 | 优点 | 缺点 |
+|------|------|------|
+| **A. 独立文件**（采纳） | AI 只需读 ~110 行索引；零内容污染；重建不影响原文件格式 | 多一个文件 |
+| B. 插入同文件顶部 | AI 读一个文件即可 | 必须读完 288+ 行才能看到索引；每次重建需改写原文件头部 |
+| **行号链接**（采纳） | 100% 可靠；不依赖 GitHub 锚点算法 | 编辑原文件后需重建索引 |
+| C. 标题锚点 | 语义化 | GitHub 对中文锚点生成规则复杂且不稳定 |
+
+**后果**：
+- AGENTS.md 恢复指令更新为「先读 troubleshooting-index.md 快速定位，再读 troubleshooting.md 详情」
+- 每次修改 troubleshooting.md 后需运行脚本重建索引（未来可集成到 sync-knowledge.py 自动重建）

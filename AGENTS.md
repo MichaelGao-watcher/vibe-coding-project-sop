@@ -167,7 +167,7 @@
 1. **Git 同步**：如项目有 `.git` 目录，先执行 `git pull` 拉取最新状态；如有冲突则暂停并报错，等待用户解决
 2. 读取 `status.md`（主数据源）：阶段、进度、待办、阻塞项
 3. 读取 `session-log.md` 最后一条（辅数据源）：只取「遗留问题/下轮开始点」一句话
-4. 搜索 `troubleshooting.md`（条件性）：如用户遇到报错，按关键词匹配已记录问题
+4. 搜索 troubleshooting（条件性）：如用户遇到报错，先读取 `troubleshooting-index.md` 快速定位相关条目，再读取 `troubleshooting.md` 详细内容。索引由 `scripts/build-troubleshooting-index.py` 自动生成，含按技术栈分组视图。
 5. 判断内容有效性：关键字段是否为占位符？session-log 是否无实际记录？
 6. 综合分析：结合 status.md 优先级、session-log 遗留问题、troubleshooting.md 匹配结果，给出建议
 7. 汇报恢复摘要（详细格式见 `session-log.md` → 恢复指令附录）
