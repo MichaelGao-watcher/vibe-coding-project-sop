@@ -41,3 +41,24 @@
 
 **反哺母库**：
 如其他项目在开发过程中产生了新的可复用经验，可手动提交到母库仓库，供所有项目共享。
+
+---
+
+## 附录：推荐技能与工具
+
+> 以下资源非母库产出，但经评估对特定类型的消费端项目有显著价值，按需参考。
+
+### 前端设计：Anthropic frontend-design skill
+
+**适用场景**：项目有浏览器前端、Tauri 桌面应用、React/Vue 组件等 UI 开发需求。
+
+**核心价值**：
+- 避免 AI 生成前端的"千篇一律"（generic AI slop）
+- 强制选择 BOLD 美学方向（极简/极繁/复古未来/有机自然等），然后精确执行
+- 具体约束：禁用 Inter/Arial/系统字体、禁用紫色渐变白色背景、禁用可预测布局
+
+**获取方式**：
+- GitHub：`https://github.com/adryanmoldokkr32-pixel/anthropics-skills/tree/main/skills/frontend-design`
+- 或作为 Claude Code skill 安装
+
+**使用建议**：在阶段五（开发实现）中，如子任务涉及前端 UI 开发，可在 subAgent 的接力指令中引用此 skill，确保输出界面具有独特设计感而非模板化痕迹。

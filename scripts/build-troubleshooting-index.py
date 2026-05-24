@@ -14,6 +14,7 @@ import argparse
 import re
 import sys
 from pathlib import Path
+from typing import Optional, Tuple
 
 
 SOURCE_FILE = "troubleshooting.md"
@@ -72,7 +73,7 @@ def extract_source(text: str) -> tuple[str, str]:
     return text.strip(), ""
 
 
-def parse_table_row(line: str) -> tuple[str, str] | None:
+def parse_table_row(line: str) -> Optional[Tuple[str, str]]:
     """解析 Markdown 表格行，返回 (字段名, 字段值)"""
     if not line.startswith("|"):
         return None
@@ -93,7 +94,7 @@ def parse_troubleshooting(path: str) -> list[dict]:
     """解析 troubleshooting.md，返回条目列表"""
     entries: list[dict] = []
     current_category = ""
-    current_entry: dict | None = None
+    current_entry: Optional[dict] = None
 
     with open(path, "r", encoding="utf-8") as f:
         for line_no, raw in enumerate(f, start=1):

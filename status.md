@@ -20,38 +20,12 @@
 
 ## 待办 📋
 
-### 优先级 1 — 阻塞项
-- [x] 在真实 GitHub 仓库上测试 `scripts/sync-knowledge.py` ✅
-- [x] 确认用户的 GitHub 用户名并填入 `config/github-sync.json` ✅
-
 ### 优先级 2 — 功能
-- [x] 为 `lessons-learned.md` 增加标签/分类系统 ✅（94 条经验已打标，新增 anti-patterns-checklist.md 模板）
-- [x] 为 troubleshooting 增加搜索索引（按关键词快速定位） ✅（27 条问题已索引，自动生成 `troubleshooting-index.md`，技术栈分组视图）
 - [ ] 试用已安装的 Superpowers skills（brainstorming / systematic-debugging / test-driven-development），评估是否融入 vibe-sop 工作流
 
 ### 优先级 3 — 优化
 - [ ] 脚本增加 `--dry-run` 模式，预览变更但不写入
 - [ ] 脚本增加 `--since` 参数，只同步某日期后的新增内容
-
-### 老设备接力 — 待执行（Windows i7-7500U）
-> 用户说「恢复」后，AI 按以下清单执行。macOS 端已完成 `llm-server/` 文件更新并已 push。
-
-- [x] `git pull` 拉取最新 `llm-server/start-llm-server.ps1` ✅
-- [x] 下载 DeepSeek-R1-Distill-Qwen-1.5B Q4_K_M GGUF 模型（~1.1GB）到 `$env:TEMP` ✅（HuggingFace 超时，改用 ModelScope 成功）
-- [x] 停止当前 `llama-server` 进程 ✅
-- [x] 以管理员身份运行 `start-llm-server.ps1` 启动新模型 ✅
-- [x] 验证：`curl http://192.168.18.122:11434/v1/models` 返回 DeepSeek 模型名 ✅
-
-```powershell
-# 下载命令
-$ModelUrl = "https://huggingface.co/kakajiang/DeepSeek-R1-Distill-Qwen-1.5B-GGUF/resolve/main/deepseek-r1-distill-qwen-1.5b.Q4_K_M.gguf"
-Invoke-WebRequest -Uri $ModelUrl -OutFile "$env:TEMP\deepseek-r1-distill-qwen-1.5b.Q4_K_M.gguf" -UseBasicParsing
-
-# 重启服务
-Get-Process -Name "llama-server" -ErrorAction SilentlyContinue | Stop-Process -Force
-cd "D:\Vibe-Code\vibe-coding-project-sop\llm-server"
-.\start-llm-server.ps1
-```
 
 ---
 
