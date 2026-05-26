@@ -7,3 +7,4 @@ __pycache__/
 
 # 配置文件中的敏感信息（如 GitHub Token）
 # 注意：当前 config/github-sync.json 中只有用户名，如需添加 token，请使用环境变量或 git update-index --skip-worktree
+.aider*
