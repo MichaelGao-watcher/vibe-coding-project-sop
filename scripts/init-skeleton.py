@@ -24,6 +24,7 @@ TEMPLATE_FILES = [
     "decisions.md",
     "troubleshooting.md",
     "lessons-learned.md",
+    ".gitattributes",
 ]
 
 # 从骨架根目录复制的文件（规则模板）
