@@ -112,3 +112,4 @@ vibe-coding-project-sop/
 | 2026-05-23 | **GitHub push 通路修复**：诊断 SSH `Permission denied (publickey)`，放弃 SSH 密钥方案，安装 GitHub CLI (v2.69.0) 到 `~/bin/`，通过 `HTTPS_PROXY` 完成 `gh auth login`，切换 git 远程 URL 为 HTTPS，`gh auth setup-git` 管理凭证。fetch 测试通过，push 恢复。
 | 2026-05-26 | **CBC 状态行配置**：创建 `~/.codebuddy/statusline.sh`（显示模型、目录、Git 分支、费用、耗时），更新 `~/.codebuddy/settings.json` 启用状态行；删除 Superpowers skills 待办（用户决定不使用） |
 | 2026-05-26 | **存档**：用户查询文件树、Git 状态后执行存档。提交未上传变更（AGENTS.md、scripts/init-skeleton.py、templates/.gitattributes） |
+| 2026-05-26 | **init-skeleton.py Python 3.9 兼容修复**：修复 `str | None` → `Optional[str]` 等类型注解，支持 macOS 12 默认 Python 3.9；部署到 blindfold-chess（+`.gitattributes`）和 french-exit（+`vibe-coding-sop.md` + `.gitattributes`） |

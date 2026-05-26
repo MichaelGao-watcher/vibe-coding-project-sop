@@ -14,6 +14,7 @@ import argparse
 import os
 import sys
 from pathlib import Path
+from typing import List, Optional, Tuple
 
 
 # 从 templates/ 复制的文件
@@ -60,7 +61,7 @@ def _is_valid_skeleton(path: Path) -> bool:
     return path.is_dir() and (path / "templates").is_dir() and (path / "AGENTS.md").is_file()
 
 
-def find_skeleton_path(args_path: str | None) -> Path | None:
+def find_skeleton_path(args_path: Optional[str]) -> Optional[Path]:
     """定位骨架项目路径，优先级：参数 > 环境变量 > 交互询问"""
     # 1. 命令行参数
     if args_path:
@@ -97,7 +98,7 @@ def find_skeleton_path(args_path: str | None) -> Path | None:
         # 继续询问，不退出
 
 
-def detect_conflicts(target_dir: Path) -> list[str]:
+def detect_conflicts(target_dir: Path) -> List[str]:
     """检测目标目录中已存在的冲突文件"""
     conflicts = []
     all_files = set(TEMPLATE_FILES + ROOT_FILES)
@@ -176,7 +177,7 @@ def main() -> int:
         log(f"检测到以下文件已存在，将跳过（使用 --force 覆盖）: {', '.join(conflicts)}")
 
     # 复制基础设施
-    results: list[tuple[str, str]] = []
+    results: List[Tuple[str, str]] = []
     templates_dir = skeleton_path / "templates"
 
     # 确定模板文件列表：如果 --with-knowledge，重叠文件用母库版本替代空模板

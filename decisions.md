@@ -412,3 +412,28 @@
 **后果**：
 - AGENTS.md 恢复指令更新为「先读 troubleshooting-index.md 快速定位，再读 troubleshooting.md 详情」
 - 每次修改 troubleshooting.md 后需运行脚本重建索引（未来可集成到 sync-knowledge.py 自动重建）
+
+## ADR-017：init-skeleton.py 保持 Python 3.9 兼容
+
+**日期**：2026-05-26
+**状态**：已采纳
+**上下文**：macOS 12 默认 Python 3.9.6，不支持 `str | None` 和 `list[str]` 等 3.10+ 类型注解语法。用户运行 `init-skeleton.py` 直接报错 `TypeError: unsupported operand type(s) for |`。
+
+**决策**：
+1. 将所有 3.10+ 类型注解替换为 3.6+ 兼容写法
+2. 具体替换：
+   - `str | None` → `Optional[str]`
+   - `Path | None` → `Optional[Path]`
+   - `list[str]` → `List[str]`
+   - `list[tuple[str, str]]` → `List[Tuple[str, str]]`
+3. 新增 `from typing import List, Optional, Tuple`
+
+**理由**：
+1. macOS 12 是当前广泛使用的版本，默认 Python 3.9 无法直接升级
+2. 强制用户升级 Python 增加了使用门槛，与骨架"低门槛初始化"的定位冲突
+3. `typing` 模块的旧语法在所有 Python 3.x 版本中都可运行，无需额外依赖
+4. 后续新脚本也应默认采用 Python 3.9 兼容写法，直到项目明确要求 3.10+
+
+**后果**：
+- 脚本兼容性：Python 3.6 ~ 3.13 均可运行
+- 代码可读性略有下降（`Optional[str]` vs `str | None`），但这是向后兼容的必要代价

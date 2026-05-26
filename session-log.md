@@ -267,3 +267,29 @@
 **遗留问题 / 下轮开始点**：
 - P3 待办（`--dry-run`、`--since`）尚未启动
 - `templates/.gitattributes` 已添加但还未正式使用
+
+---
+
+## 2026-05-26 第二轮
+
+**会话类型**：init-skeleton.py Python 3.9 兼容修复 + 部署
+
+**完成内容**：
+1. 用户查询 init-skeleton.py 命令用法
+2. 用户要求将骨架部署到 blindfold-chess 和 french-exit 两个项目（带母库经验）
+3. 发现 `python3` 在 macOS 上不是 `python`，用户改用 `python3`
+4. 发现 Python 3.9 不支持 `str | None` 和 `list[str]` 类型注解语法
+5. 修复 `scripts/init-skeleton.py`：
+   - 新增 `from typing import List, Optional, Tuple`
+   - 替换 3 处类型注解为 Python 3.9 兼容写法
+6. 部署结果：
+   - **blindfold-chess**：创建 `.gitattributes`，7 个已有文件跳过
+   - **french-exit**：创建 `vibe-coding-sop.md` + `.gitattributes`，6 个已有文件跳过
+
+**关键决策**：
+- init-skeleton.py 保持 Python 3.9 兼容性（macOS 12 默认 Python），避免强制用户升级
+- 使用 `Optional[str]` / `List[str]` / `List[Tuple[str, str]]` 替代 3.10+ 语法
+
+**遗留问题 / 下轮开始点**：
+- P3 待办（`--dry-run`、`--since`）尚未启动
+- blindfold-chess 的 `.gitattributes` 新增待 Git 提交
