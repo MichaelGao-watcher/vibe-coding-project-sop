@@ -293,3 +293,86 @@
 **遗留问题 / 下轮开始点**：
 - P3 待办（`--dry-run`、`--since`）尚未启动
 - blindfold-chess 的 `.gitattributes` 新增待 Git 提交
+
+---
+
+## 2026-05-28
+
+**会话类型**：Playwright MCP 安装配置（浏览器自动化）
+
+**完成内容**：
+1. 评估 trycua/cua 项目（Computer-Use Agent 基础设施），分析其能力与局限
+2. 评估用户场景：天猫后台自动下载数据 — 结论是登录需人工介入，后续自动化可行
+3. 对比 Playwright / Selenium / Kimi WebBridge 三个方案，推荐 Playwright MCP
+4. 安装 Playwright 浏览器（chromium-1223）+ Playwright Python 1.60.0
+5. 安装 `@playwright/mcp` 全局 npm 包（v0.0.75，23 个工具）
+6. 创建 `opencode.json` MCP 配置，注册 Playwright 为 opencode 的浏览器工具
+7. 验证 MCP server 正常响应 tools/list 请求
+
+**关键配置**：
+- `opencode.json`：`mcp.playwright` 配置已写入项目根目录
+- Playwright Chromium：`%USERPROFILE%\AppData\Local\ms-playwright\chromium-1223`
+- MCP 工具：browser_navigate, browser_snapshot, browser_click, browser_type, browser_take_screenshot 等 23 个
+
+**遗留问题 / 下轮开始点**：
+- 用户需重启 opencode 使 MCP 配置生效
+- 重启后输入「恢复」可恢复上下文
+- 验证 MCP 工具在 opencode 会话中可用
+- 实际测试：打开浏览器 → 导航到天猫后台 → 登录 → 自动导出数据
+
+---
+
+## 2026-05-28 第二轮
+
+**会话类型**：天猫后台自动化测试（Playwright MCP Edge 浏览器）
+
+**完成内容**：
+1. 修改 `opencode.json`：浏览器从 chromium 切换到 msedge
+2. 安装 Chrome for Testing 浏览器（183.5 MiB）
+3. 启动 Edge 浏览器并导航到生意参谋登录页面
+4. 发现 headless 模式下无法显示浏览器窗口，用户无法手动登录
+5. 修改配置移除 `--headless` 参数，使浏览器窗口可见
+6. 用户需要在浏览器窗口中手动登录生意参谋
+
+**关键配置**：
+- `opencode.json`：`"command": ["npx", "-y", "@playwright/mcp", "--browser", "msedge"]`
+- 目标URL：`https://sycm.taobao.com/portal/home.htm`
+- 登录方式：用户手动输入凭据
+
+**当前状态**：
+- 浏览器已启动，登录页面已显示
+- 等待用户在浏览器窗口中手动登录
+- 登录后需导航到销售报表页面，设置昨日日期（2026-05-27），导出销售报表
+
+**遗留问题 / 下轮开始点**：
+- 用户需在浏览器窗口中手动登录生意参谋
+- 登录后导航到销售报表页面
+- 设置昨日日期并导出销售报表
+
+---
+
+## 2026-05-28 第三轮
+
+**会话类型**：天猫搁置 + Playwright 评估 + 目录清理
+
+**完成内容**：
+1. 恢复摘要：天猫后台自动化搁置（平台警告），Playwright 配置保留
+2. 评估 Playwright MCP 其他用途：测试、数据采集、表单填写、截图
+3. 评估 X.com 反爬机制：登录墙、API 限制、行为检测、IP 封禁
+4. 评估反爬弱网站：政府数据、学术资源、开发者文档、RSS 新闻
+5. 删除 `.playwright-mcp` 缓存目录
+6. 清理无用文件：
+   - `.DS_Store`（macOS 系统文件）
+   - `deepseek-update.patch`（一次性补丁）
+   - `.backup/`（42 个历史备份）
+   - `llm-server/` 中 4 个旧文件/备份
+7. 存档：更新 status.md、session-log.md，Git 提交
+
+**关键决策**：
+- 天猫后台自动化搁置，不再尝试
+- Playwright MCP 配置保留，探索其他用途
+- 清理项目目录，删除无用文件
+
+**遗留问题 / 下轮开始点**：
+- 探索 Playwright MCP 其他用途（测试、数据采集等）
+- 完成 P3 待办：--dry-run 和 --since 参数

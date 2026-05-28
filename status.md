@@ -24,6 +24,9 @@
 - [ ] 脚本增加 `--dry-run` 模式，预览变更但不写入
 - [ ] 脚本增加 `--since` 参数，只同步某日期后的新增内容
 
+### 优先级 4 — Playwright
+- [ ] 探索 Playwright MCP 其他用途（天猫后台搁置，配置保留）
+
 ---
 
 ## 技术债务 🏚️
@@ -113,3 +116,6 @@ vibe-coding-project-sop/
 | 2026-05-26 | **CBC 状态行配置**：创建 `~/.codebuddy/statusline.sh`（显示模型、目录、Git 分支、费用、耗时），更新 `~/.codebuddy/settings.json` 启用状态行；删除 Superpowers skills 待办（用户决定不使用） |
 | 2026-05-26 | **存档**：用户查询文件树、Git 状态后执行存档。提交未上传变更（AGENTS.md、scripts/init-skeleton.py、templates/.gitattributes） |
 | 2026-05-26 | **init-skeleton.py Python 3.9 兼容修复**：修复 `str | None` → `Optional[str]` 等类型注解，支持 macOS 12 默认 Python 3.9；部署到 blindfold-chess（+`.gitattributes`）和 french-exit（+`vibe-coding-sop.md` + `.gitattributes`） |
+| 2026-05-28 | **Playwright MCP 安装配置**：评估 trycua/cua、对比 Playwright/Selenium/Kimi WebBridge，安装 Playwright Chromium + MCP (v0.0.75, 23 tools)，创建 opencode.json 注册 MCP，待重启生效 |
+| 2026-05-28 | **Playwright MCP 浏览器切换**：修改 opencode.json 从 chromium 切换到 msedge，移除 --headless 参数显示浏览器窗口，安装 Chrome for Testing 浏览器，测试天猫后台自动化流程（生意参谋登录页面已显示） |
+| 2026-05-28 | **天猫后台搁置 + 目录清理**：因平台警告搁置天猫自动化项目，Playwright 配置保留；删除 .playwright-mcp 缓存、.DS_Store、deepseek-update.patch、.backup 目录、llm-server 旧文件（Modelfile、ollama-setup、*.bak） |
