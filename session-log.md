@@ -376,3 +376,31 @@
 **遗留问题 / 下轮开始点**：
 - 探索 Playwright MCP 其他用途（测试、数据采集等）
 - 完成 P3 待办：--dry-run 和 --since 参数
+
+---
+
+## 2026-05-28 第四轮
+
+**会话类型**：自然语言同步经验配置
+
+**完成内容**：
+1. 创建 `scripts/pull.py` — 通用母库经验拉取脚本
+2. 修改母库 AGENTS.md — 新增 3.7 母库经验指令（触发词：同步经验）
+3. 为 6 个项目配置母库路径注释：
+   - blindfold-chess ✅
+   - ecommerce-report-code ✅
+   - french-exit ✅
+   - qianniu_business_analytics ✅
+   - scan-uninstall-residual ✅（新建 AGENTS.md）
+   - the-watcher-publisher-v5.5 ✅
+4. 为 blindfold-chess 和 ecommerce-report-code 创建 config/github-sync.json
+5. 测试 pull.py 脚本运行正常
+
+**关键决策**：
+- 触发词简化为「同步经验」，支持所有项目
+- 通过 `<!-- 母库: <路径> -->` 注释自动识别母库位置
+- pull.py 自动在 AGENTS.md 中添加触发词指令
+
+**遗留问题 / 下轮开始点**：
+- 探索 Playwright MCP 其他用途
+- 完成 P3 待办：--dry-run 和 --since 参数

@@ -119,3 +119,4 @@ vibe-coding-project-sop/
 | 2026-05-28 | **Playwright MCP 安装配置**：评估 trycua/cua、对比 Playwright/Selenium/Kimi WebBridge，安装 Playwright Chromium + MCP (v0.0.75, 23 tools)，创建 opencode.json 注册 MCP，待重启生效 |
 | 2026-05-28 | **Playwright MCP 浏览器切换**：修改 opencode.json 从 chromium 切换到 msedge，移除 --headless 参数显示浏览器窗口，安装 Chrome for Testing 浏览器，测试天猫后台自动化流程（生意参谋登录页面已显示） |
 | 2026-05-28 | **天猫后台搁置 + 目录清理**：因平台警告搁置天猫自动化项目，Playwright 配置保留；删除 .playwright-mcp 缓存、.DS_Store、deepseek-update.patch、.backup 目录、llm-server 旧文件（Modelfile、ollama-setup、*.bak） |
+| 2026-05-28 | **自然语言同步经验**：创建 `scripts/pull.py` 通用拉取脚本，简化触发词为「同步经验」，为 6 个项目配置母库路径注释和 github-sync.json |
