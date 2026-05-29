@@ -5,6 +5,17 @@
 
 ---
 
+### AI 重复实现已有组件（棋盘/网格类 UI） [来源:blindfold-chess @2026-05-29]
+
+| | 内容 |
+|---|---|
+| **状态** | 待修复 |
+| **现象** | 新增模块（如坐标练习 coordinate.js）手写棋盘网格创建、高亮、抖动、坐标标注等逻辑，而不是复用已有的 `BoardRenderer` 组件。guide.js 的 mini-board 也是部分重复实现 |
+| **原因** | AI 没有在写代码前搜索项目中已有的同类组件；lessons-learned 中的描述粒度太粗（只提颜色统一，没提组件复用） |
+| **解决** | 1. 新增模块前，先用 grep/搜索 `experience-index.md` 查找可复用的 UI 组件<br>2. 棋盘/网格类 UI 必须通过 `BoardRenderer.create()` 创建，禁止手写<br>3. 如需不同尺寸，在 `BoardRenderer` 中增加 `squareSize` 参数，不要另起炉灶<br>4. `BoardRenderer` 已支持：网格创建、高亮、清除高亮、抖动动画、坐标标注、样式切换、点击回调 |
+
+---
+
 ### Stockfish 加载超时 / 引擎不启动 [来源:blindfold-chess @2026-05-21]
 
 | | 内容 |

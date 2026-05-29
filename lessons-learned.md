@@ -40,7 +40,7 @@
 | 27 | TAG:dom TAG:i18n | WARNING | **全局 `updateTexts()` 与模块私有 `_updateXxx()` 可能存在 DOM 竞争**：两者操作同一 DOM 元素。测试必须验证最终渲染结果，而非中间状态 [来源:blindfold-chess @2026-05-21] | settings.js / common.js |
 | 28 | TAG:ux | INFO | **配置类设置项用「弹窗选择」优于「循环切换」**：循环切换隐藏了全部选项，用户不知道有哪些风格；弹窗一次展示所有选项+预览，认知负荷更低 [来源:blindfold-chess @2026-05-21] | SettingsModule UI |
 | 29 | TAG:dom | WARNING | **`cloneNode(true)` 无法移除旧事件监听器，它只是复制了 DOM 结构**：真正安全的解绑是 `removeEventListener` + 保存引用 [来源:blindfold-chess @2026-05-21] | settings.js |
-| 30 | TAG:ux TAG:architecture | WARNING | **UI 风格不一致的根因通常是「硬编码颜色」**：引入统一的「棋盘风格配置源」后，所有棋盘自动同步，消除不一致的根因 [来源:blindfold-chess @2026-05-21] | BoardRenderer / coordinate.js |
+| 30 | TAG:ux TAG:architecture | WARNING | **UI 风格不一致的根因通常是「硬编码颜色」**：引入统一的「棋盘风格配置源」后，所有棋盘自动同步，消除不一致的根因。**更关键的是：新增模块前必须搜索项目中是否有可复用的同类组件**（如 `BoardRenderer`），禁止手写已有功能 [来源:blindfold-chess @2026-05-21] | BoardRenderer / coordinate.js |
 | 31 | TAG:ux TAG:architecture | WARNING | **功能入口迁移需要同步更新「正向路径」和「反向路径」**：不仅要添加新入口，还要移除旧入口，否则用户会在两个地方看到同一功能 [来源:blindfold-chess @2026-05-21] | WelcomeModule / index.html |
 | 32 | TAG:data TAG:architecture | INFO | **数据层的双语字段与代码层的硬编码分支是两个问题**：区分"数据双语"和"代码分支"可避免过度重构 [来源:blindfold-chess @2026-05-21] | replay.js / data/games.js |
 | 33 | TAG:testing | WARNING | **测试中断言的具体文本值是重构的敏感点**：重构前应先审计测试中的文本断言，预估需要调整的范围 [来源:blindfold-chess @2026-05-21] | 测试维护 |

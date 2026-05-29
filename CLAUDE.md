@@ -27,7 +27,7 @@ This repo has two roles in one:
 |--------|---------|----------|
 | `scripts/init-skeleton.py` | One-click init: copy infrastructure files + optional knowledge seed to a target project | `python scripts/init-skeleton.py --skeleton . --with-knowledge` |
 | `scripts/sync-knowledge.py` | Aggregate knowledge from GitHub repos into the mother library | `python scripts/sync-knowledge.py` |
-| `scripts/build-troubleshooting-index.py` | Auto-generate `troubleshooting-index.md` from `troubleshooting.md` | `python3 scripts/build-troubleshooting-index.py` |
+| `scripts/build-experience-index.py` | Auto-generate unified `experience-index.md` from troubleshooting + lessons-learned + decisions | `python3 scripts/build-experience-index.py` |
 | `scripts/pull.py` | Quick pull of mother-library files into a downstream project | `python pull.py` |
 
 Requires Python 3.9+. Only `sync-knowledge.py` has an external dependency (`requests`).
@@ -48,6 +48,7 @@ These are natural-language commands parsed from `AGENTS.md` that trigger multi-s
 - **ARCHIVE-01/02**: "存档" triggers confirmation-first archive workflow; never skip confirmation.
 - **RULE-05**: Knowledge sync must backup before merge, tag every entry with `[来源:repo @date]`.
 - **RULE-07**: `troubleshooting-index.md` is auto-generated, never edit it manually.
+- **RULE-08**: Before adding new modules, search for existing reusable components. Never rewrite what already exists.
 
 ## Git conventions
 
