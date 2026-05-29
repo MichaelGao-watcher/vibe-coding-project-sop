@@ -170,3 +170,35 @@
 | 104 | TAG:build-env | INFO | Git for Windows 的 bash `/tmp` 与 PowerShell `$env:TEMP` 指向同一物理目录（`C:\Users\<user>\AppData\Local\Temp`），跨 shell 操作文件无需移动 | 环境兼容 | [来源:vibe-coding-project-sop @2026-05-24] |
 | 105 | TAG:build-env | INFO | 国内下载 HuggingFace 模型时，ModelScope 是比 hf-mirror 更可靠的 fallback（后者可能 404 或同步延迟） | 网络诊断 | [来源:vibe-coding-project-sop @2026-05-24] |
 | 106 | TAG:build-env | WARNING | Windows 非管理员运行 PowerShell 脚本时，`New-NetFirewallRule` 会失败，但 `llama-server` 本身可正常启动；首次运行需提升权限 | 环境兼容 | [来源:vibe-coding-project-sop @2026-05-24] |
+| | `/c` 执行完关闭窗口；`/k` 保持窗口打开 [来源:french-exit @2026-05-29] |  |
+| | `-WindowStyle Minimized` 最小化不干扰工作 [来源:french-exit @2026-05-29] |  |
+| | **根因**：CSS `fixed` + `z-50` 的元素默认接收鼠标事件，即使视觉上看起来透明也会拦截点击 [来源:french-exit @2026-05-29] |  |
+| | **修复**：给所有非交互性的 `fixed` 装饰元素统一添加 `pointer-events-none` [来源:french-exit @2026-05-29] |  |
+| | **教训**：任何使用 `fixed`/`absolute` + 高 `z-index` 的纯展示元素，必须默认视为点击拦截器 [来源:french-exit @2026-05-29] |  |
+| | **教训**：E2E 测试不是写一次就完，它是前端契约测试。UI 迭代时必须同步评估对 selector、交互流程、状态断言的影响 [来源:french-exit @2026-05-29] |  |
+| | **方案**：`ScannerRegistry::scan_impl` 的 `progress_cb` 在每次上报进度前 `while *pause_rx.borrow() { sleep(100ms) }` [来源:french-exit @2026-05-29] |  |
+| | **局限**：如果 scanner 长时间不调用 `progress`（如读取超大文件），暂停会有延迟 [来源:french-exit @2026-05-29] |  |
+| | **教训**：对于已成型的大型 trait 实现体系，优先在调度层（registry）而非实现层（scanner）插入横切关注点 [来源:french-exit @2026-05-29] |  |
+| | 7 个 Scanner 并行，权重分配：fs 50% + browser 15% + system 15% + 其他各 5% [来源:french-exit @2026-05-29] |  |
+| | 修改范围：Rust `ScanProgress` / `ProgressEvent` 结构 → `ScannerRegistry::scan_impl` 加权计算 → 前端 `ScanPage.tsx` 优先使用 [来源:french-exit @2026-05-29] |  |
+| | 测试：后端 129 测、前端 51 测全绿 [来源:french-exit @2026-05-29] |  |
+| | **HTTP Digest 认证回写规则**：刷新 token 时只更新 `jycmOpenApiCookie`，必须保留 `accessKey` 和 `secretKey`。若覆盖整个文件丢失 AK/SK，后续 Digest 刷新将永久失败 [来源:qianniu_business_analytics @2026-05-29] | auth.md / auth/jycm.json |
+| | **日期区间陷阱**：后端按 "< endDate" 解析，`T23:59:59.999+08:00` 和 `Z`（UTC）后缀都会导致多返回一天数据。必须用 `T00:00:00+08:00` [来源:qianniu_business_analytics @2026-05-29] | SKILL.md / fetch-data.md |
+| | **shopIds 类型陷阱**：后端要求 `List<String>`（JSON 字符串数组），传入数字数组会导致参数校验失败 [来源:qianniu_business_analytics @2026-05-29] | jycm_fetch_sycm_shop.py |
+| | **Token Key 只问一次**：凭证文件存在但 Cookie 过期时，必须先走 Digest 自动刷新，绝不能直接问用户。这是用户体验的关键红线 [来源:qianniu_business_analytics @2026-05-29] | auth.md |
+| | **Markdown 一源多用**：对话交付和钉钉推送使用同一套 Markdown 正文，避免"对话一版、钉钉一版"的信息不一致 [来源:qianniu_business_analytics @2026-05-29] | report-analyze.md |
+| | **多店合并 vs 跨平台**：同为淘系的多家店铺可一次 `createAndDownload` 合并取数；但淘系与京东/抖音混用时必须明确拒绝，不得伪造数据 [来源:qianniu_business_analytics @2026-05-29] | SKILL.md | | TAG:build-env TAG:testing [来源:vibe-coding-project-sop @2026-05-22] | INFO | 纯 HTML+CSS+JS 项目无需 npm，双击 `index.html` 即可预览，但涉及 Web Worker（如 Stockfish）时必须启 HTTP 服务器 [来源:blindfold-chess @2026-05-21] | EngineModule |
+| | **subprocess → direct import 重构**：`subprocess.run` 调用同目录脚本虽然解耦，但 stdout 解析脆弱、异常传递困难。改为 `sys.path.insert(0, SCRIPT_DIR) + import module` 后直接调用函数，错误栈清晰且可测试 [来源:qianniu_business_analytics @2026-05-29] | jycm_auto_report.py |
+| | **多店 DataFrame 合并模式**：为每个店铺 DataFrame 添加内部标识列（如 `_shop_name`），再用 `pd.concat` 合并，可使单店/多店共用同一套分析函数，只需在报告生成层判断 `is_multi_shop` 切换展示逻辑 [来源:qianniu_business_analytics @2026-05-29] | analyze_excel_report.py |
+| | **pytest stdin 捕获陷阱**：pytest 默认捕获 stdout/stderr，也会替换 `sys.stdin` 为 `DontReadFromInput`。测试 CLI 脚本中从 stdin 读取的逻辑时，必须用 `-f` 参数或 mock `sys.stdin.read` [来源:qianniu_business_analytics @2026-05-29] | test_dingtalk_send_markdown.py |
+| | **归档而非删除空壳代码**：对于含大量 TODO 和模拟数据的脚本，直接删除会丢失已有接口设计；改为文件头标记「已归档」+ `main()` 抛 `NotImplementedError`，既防止误用又保留未来重建的参考 [来源:qianniu_business_analytics @2026-05-29] | qianniu_analytics_orchestrator.py / jycm_fetch_sycm_shop.py |
+| | 日期区间多一天的问题是通过**后端实测**发现的（请求 4/20-4/26 返回了 4/27），而非文档说明。API 对接时文档与实际行为可能有偏差，应以实测为准。 [来源:qianniu_business_analytics @2026-05-29] |  |
+| | Cookie 活性检测与订购检查**复用同一接口**（`product.json`），避免冗余调用。 [来源:qianniu_business_analytics @2026-05-29] |  |
+| | 技能包的核心约束（如时区规则、渠道范围）应在 `SKILL.md` 和 `AGENTS.md` 中**双重声明**：`SKILL.md` 面向功能执行，`AGENTS.md` 面向开发维护，确保不同场景下都不会遗忘。 [来源:qianniu_business_analytics @2026-05-29] |  |
+| | `auth.md` 中必须包含完整的 curl 参考示例，方便 Agent 直接复制执行。 [来源:qianniu_business_analytics @2026-05-29] |  |
+| | Windows Git Bash 下执行 `git init` 时，所有文本文件会触发 `LF will be replaced by CRLF` 警告。这不会阻断提交，但跨平台协作前建议统一配置 `core.autocrlf`（如 `git config --global core.autocrlf true`），否则 Linux/Mac 协作者可能遇到行尾符混乱。 [来源:qianniu_business_analytics @2026-05-29] |  |
+| | Python 脚本中通过 `sys.path.insert` 引用外部技能包路径（如 `jycm-fetch-report-nl`），在独立工作目录或环境变化后会失效。技能包应追求**自包含**（self-contained），避免跨包硬编码路径。 [来源:qianniu_business_analytics @2026-05-29] |  |
+| | [ ] `jycm_auto_report.py` 中 `sys.path.insert` 引用的外部路径 `jycm-fetch-report-nl` 在当前独立工作目录下是否已失效 — 计划通过实际运行验证 [来源:qianniu_business_analytics @2026-05-29] |  |
+| | [ ] `openpyxl` 是否已在所有运行环境中安装 — 计划补充 `requirements.txt` 并验证 [来源:qianniu_business_analytics @2026-05-29] |  |
+| | [ ] 多店合并取数时（`shopIds` 含多个 id），`createAndDownload` 返回的 Excel 列结构是否与单店一致 — 计划通过实测验证 [来源:qianniu_business_analytics @2026-05-29] |  |
+| 107 | TAG:api-design | WARNING | `gh api --paginate --slurp` 返回嵌套数组 `[page1, page2, ...]`（每页一个子数组），而非展平的单层数组。调用方需手动展平，否则 `repos[0]` 取到的是第一页列表而非第一个仓库 [母库 @2026-05-29] | sync-knowledge.py |

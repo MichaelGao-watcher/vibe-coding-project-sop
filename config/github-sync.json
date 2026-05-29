@@ -1,7 +1,6 @@
 {
-  "_comment": "跨项目知识同步配置。修改后运行 scripts/sync-knowledge.py 即可聚合经验。",
+  "_comment": "跨项目知识聚合配置。修改后运行 scripts/sync-knowledge.py 即可聚合经验。",
   "username": "MichaelGao1999",
-  "token": "",
   "includeRepos": [],
   "excludeRepos": [],
   "_syncFromNote": "母库本身不需要 syncFrom 字段。此字段由 init-from-skeleton.py 在其他项目中自动创建。母库保持空配置即可遍历所有仓库。",

@@ -404,3 +404,23 @@
 **遗留问题 / 下轮开始点**：
 - 探索 Playwright MCP 其他用途
 - 完成 P3 待办：--dry-run 和 --since 参数
+
+
+## 2026-05-29
+
+**会话类型**：触发词统一 + sync-knowledge.py 改用 gh api
+
+**完成内容**：
+1. **触发词统一**：场景 A（拉取母库）→ `拉取母库`/`拉取经验`/`更新经验`；场景 B（聚合到母库）→ `聚合`。删除 `同步经验`/`同步知识`/`聚合知识`/`母库经验` 歧义词。涉及 11 个文件
+2. **sync-knowledge.py 改用 gh api**：`api_get` 从 `requests.get` + 手动 token 改为 `gh api --paginate --slurp`，自动复用 gh 登录态。删除 config 中 `token` 字段。新增 `check_gh_auth` 启动检查
+3. **Python 3.9 兼容修复**：`dict | list | None` → `Optional[Union[dict, list]]`，所有脚本类型注解统一
+4. **聚合验证**：实际运行 `python scripts/sync-knowledge.py`，5 个仓库全部走通，15 个文件拉取成功
+5. **确认流程优化**：存档确认改为 y/n 交互
+
+**关键决策**：
+- API 调用全走 `gh cli`，文件下载走 `requests`（raw.githubusercontent.com 无需认证）
+- 聚合触发词定为唯一词 `聚合`，拉取触发词保留多词识别
+
+**遗留问题 / 下轮开始点**：
+- 探索 Playwright MCP 其他用途
+- 完成 P3 待办：--dry-run 和 --since 参数

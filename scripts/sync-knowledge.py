@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-跨项目知识同步脚本
+跨项目知识聚合脚本
 从 GitHub 用户/组织的所有仓库中拉取 decisions.md、lessons-learned.md、troubleshooting.md，
 合并到本项目中，形成跨项目知识母库。
 
@@ -8,7 +8,8 @@
     python scripts/sync-knowledge.py [--config config/github-sync.json]
 
 依赖:
-    pip install requests
+    - gh CLI（需先 gh auth login）
+    - requests（仅用于下载 raw 文件）
 """
 
 import argparse
@@ -17,11 +18,12 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
 from datetime import datetime
 from difflib import SequenceMatcher
 from pathlib import Path
-from typing import Any
+from typing import Any, List, Optional, Union
 from urllib.parse import quote
 
 import requests
@@ -29,7 +31,6 @@ import requests
 
 DEFAULT_CONFIG = "config/github-sync.json"
 TARGET_FILES = ["decisions.md", "lessons-learned.md", "troubleshooting.md"]
-GITHUB_API = "https://api.github.com"
 RAW_GITHUB = "https://raw.githubusercontent.com"
 
 
@@ -47,22 +48,32 @@ def save_config(path: str, cfg: dict) -> None:
         json.dump(cfg, f, indent=2, ensure_ascii=False)
 
 
-def api_get(url: str, token: str | None = None) -> dict | list | None:
-    headers = {"Accept": "application/vnd.github+json"}
-    if token:
-        headers["Authorization"] = f"Bearer {token}"
+def check_gh_auth() -> bool:
+    """检查 gh CLI 是否已认证。"""
+    result = subprocess.run(["gh", "auth", "status"], capture_output=True, text=True)
+    return result.returncode == 0
+
+
+def api_get(endpoint: str) -> Optional[Union[dict, list]]:
+    """用 gh api 调用 GitHub API，自动复用 gh 登录态。"""
     try:
-        resp = requests.get(url, headers=headers, timeout=30)
-        if resp.status_code == 404:
+        result = subprocess.run(
+            ["gh", "api", "--paginate", "--slurp", endpoint],
+            capture_output=True, text=True, timeout=30
+        )
+        if result.returncode != 0:
+            log(f"gh api 失败: {result.stderr.strip()}")
             return None
-        resp.raise_for_status()
-        return resp.json()
-    except requests.RequestException as e:
-        log(f"请求失败: {url} -> {e}")
+        return json.loads(result.stdout)
+    except FileNotFoundError:
+        log("错误: 未找到 gh CLI，请先安装: https://cli.github.com")
+        return None
+    except (subprocess.TimeoutExpired, json.JSONDecodeError) as e:
+        log(f"请求失败: {endpoint} -> {e}")
         return None
 
 
-def fetch_raw(owner: str, repo: str, branch: str, filepath: str) -> str | None:
+def fetch_raw(owner: str, repo: str, branch: str, filepath: str) -> Optional[str]:
     url = f"{RAW_GITHUB}/{owner}/{repo}/{branch}/{quote(filepath)}"
     try:
         resp = requests.get(url, timeout=30)
@@ -75,19 +86,19 @@ def fetch_raw(owner: str, repo: str, branch: str, filepath: str) -> str | None:
         return None
 
 
-def list_repos(username: str, token: str | None = None) -> list[dict]:
-    repos = []
-    page = 1
-    while True:
-        url = f"{GITHUB_API}/users/{username}/repos?per_page=100&page={page}"
-        data = api_get(url, token)
-        if not data:
-            break
-        repos.extend(data)
-        if len(data) < 100:
-            break
-        page += 1
-    return repos
+def list_repos(username: str) -> List[dict]:
+    """列出用户所有仓库，gh api --paginate --slurp 自动处理翻页。"""
+    endpoint = f"/users/{username}/repos"
+    data = api_get(endpoint)
+    if data is None:
+        return []
+    # --slurp 返回 [page1, page2, ...]，需展平
+    if isinstance(data, list) and data and isinstance(data[0], list):
+        flat = []
+        for page in data:
+            flat.extend(page)
+        return flat
+    return data
 
 
 def filter_repos(repos: list[dict], include: list[str], exclude: list[str]) -> list[dict]:
@@ -99,7 +110,7 @@ def filter_repos(repos: list[dict], include: list[str], exclude: list[str]) -> l
     return [r for r in repos if r["name"] in names]
 
 
-def backup_file(path: Path) -> Path | None:
+def backup_file(path: Path) -> Optional[Path]:
     backup_dir = path.parent / ".backup"
     backup_dir.mkdir(exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -307,9 +318,12 @@ def write_file(path: Path, content: str) -> None:
 
 
 def run_sync(config_path: str) -> int:
+    if not check_gh_auth():
+        log("错误: gh CLI 未认证，请先运行: gh auth login")
+        return 1
+
     cfg = load_config(config_path)
     username = cfg.get("username", "").strip()
-    token = cfg.get("token", "").strip() or None
     include = cfg.get("includeRepos", [])
     exclude = cfg.get("excludeRepos", [])
     branch = cfg.get("branch", "main")
@@ -324,7 +338,7 @@ def run_sync(config_path: str) -> int:
 
     if sync_from:
         log(f"母库同步模式: 只从 {sync_from} 拉取更新")
-        repo_info = api_get(f"{GITHUB_API}/repos/{username}/{sync_from}", token)
+        repo_info = api_get(f"/repos/{username}/{sync_from}")
         if not repo_info:
             log(f"错误: 无法获取仓库 {sync_from} 的信息")
             return 1
@@ -332,8 +346,8 @@ def run_sync(config_path: str) -> int:
         repos = [{"name": sync_from, "default_branch": repo_branch}]
         log(f"跳过其他仓库，只处理母库")
     else:
-        log(f"开始同步用户 {username} 的仓库知识...")
-        repos = list_repos(username, token)
+        log(f"开始聚合用户 {username} 的仓库知识...")
+        repos = list_repos(username)
         repos = filter_repos(repos, include, exclude)
         log(f"发现 {len(repos)} 个目标仓库")
 
@@ -378,7 +392,7 @@ def run_sync(config_path: str) -> int:
                 log(f"  无新内容需要合并")
 
     log("=" * 40)
-    log(f"同步完成: {stats['repos']} 个仓库, {stats['files']} 个文件, 约 {stats['entries']} 个新条目")
+    log(f"聚合完成: {stats['repos']} 个仓库, {stats['files']} 个文件, 约 {stats['entries']} 个新条目")
     return 0
 
 

@@ -14,7 +14,7 @@ import argparse
 import os
 import sys
 from pathlib import Path
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 
 KNOWLEDGE_FILES = [
@@ -23,9 +23,9 @@ KNOWLEDGE_FILES = [
     "decisions.md",
 ]
 
-AGENTS_FRAGMENT = """## 3.7 母库经验指令（「同步经验」）
+AGENTS_FRAGMENT = """## 3.7 母库经验指令（「拉取母库」）
 
-**触发词**：`同步经验`、`拉取经验`、`更新经验`（去除标点后精确匹配任一）
+**触发词**：`拉取母库`、`拉取经验`、`更新经验`（去除标点后精确匹配任一）
 
 **防误触**：
 - 消息精确匹配上述任一触发词 → 执行母库经验同步流程
@@ -46,7 +46,7 @@ def error(msg: str) -> None:
     print(f"[pull] ERROR: {msg}", file=sys.stderr)
 
 
-def find_skeleton_path(args_path: str | None) -> Path | None:
+def find_skeleton_path(args_path: Optional[str]) -> Optional[Path]:
     """定位母库路径"""
     if args_path:
         p = Path(args_path).resolve()
@@ -82,7 +82,7 @@ def ensure_agents_fragment(target_dir: Path) -> bool:
         return False
 
     content = agents_file.read_text(encoding="utf-8")
-    if "同步经验" in content or "母库经验" in content:
+    if "拉取母库" in content or "拉取经验" in content or "母库经验" in content:
         return True
 
     # 追加触发词指令
@@ -143,7 +143,7 @@ def main() -> int:
         for f in overwritten:
             print(f"    {f}")
 
-    print(f"\n[>] 下次使用: 在项目中说「同步经验」即可拉取最新内容")
+    print(f"\n[>] 下次使用: 在项目中说「拉取母库」即可拉取最新内容")
 
     return 0
 

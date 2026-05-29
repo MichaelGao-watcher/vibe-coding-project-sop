@@ -120,3 +120,5 @@ vibe-coding-project-sop/
 | 2026-05-28 | **Playwright MCP 浏览器切换**：修改 opencode.json 从 chromium 切换到 msedge，移除 --headless 参数显示浏览器窗口，安装 Chrome for Testing 浏览器，测试天猫后台自动化流程（生意参谋登录页面已显示） |
 | 2026-05-28 | **天猫后台搁置 + 目录清理**：因平台警告搁置天猫自动化项目，Playwright 配置保留；删除 .playwright-mcp 缓存、.DS_Store、deepseek-update.patch、.backup 目录、llm-server 旧文件（Modelfile、ollama-setup、*.bak） |
 | 2026-05-28 | **自然语言同步经验**：创建 `scripts/pull.py` 通用拉取脚本，简化触发词为「同步经验」，为 6 个项目配置母库路径注释和 github-sync.json |
+| 2026-05-29 | **触发词统一**：场景 A（拉取母库）→ `拉取母库`/`拉取经验`/`更新经验`；场景 B（聚合到母库）→ `聚合`；删除 `同步经验`/`同步知识`/`聚合知识`/`母库经验` 歧义词。涉及 AGENTS.md、CLAUDE.md、skeleton-manifest.json、pull.py 等 11 个文件 |
+| 2026-05-29 | **sync-knowledge.py 改用 gh api**：删除 token 配置，API 调用全走 `gh api`（自动复用 gh 登录态），修复 Python 3.9 类型注解兼容性 |

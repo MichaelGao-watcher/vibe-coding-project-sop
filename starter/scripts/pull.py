@@ -20,6 +20,7 @@ import os
 import sys
 import io
 from pathlib import Path
+from typing import Optional
 
 # Windows 终端 UTF-8 支持
 if sys.platform == "win32":
@@ -46,7 +47,7 @@ def log(msg: str) -> None:
     print(f"[init] {msg}")
 
 
-def fetch_raw(filepath: str) -> str | None:
+def fetch_raw(filepath: str) -> Optional[str]:
     url = f"{RAW_BASE}/{filepath}"
     try:
         resp = requests.get(url, timeout=30)
