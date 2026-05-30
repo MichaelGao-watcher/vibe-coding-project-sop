@@ -123,3 +123,4 @@ vibe-coding-project-sop/
 | 2026-05-29 | **触发词统一**：场景 A（拉取母库）→ `拉取母库`/`拉取经验`/`更新经验`；场景 B（聚合到母库）→ `聚合`；删除 `同步经验`/`同步知识`/`聚合知识`/`母库经验` 歧义词。涉及 AGENTS.md、CLAUDE.md、skeleton-manifest.json、pull.py 等 11 个文件 |
 | 2026-05-29 | **sync-knowledge.py 改用 gh api**：删除 token 配置，API 调用全走 `gh api`（自动复用 gh 登录态），修复 Python 3.9 类型注解兼容性 |
 | 2026-05-29 | **统一经验索引**：新建 `build-experience-index.py`，生成 `experience-index.md`（241 条，覆盖 troubleshooting + lessons-learned + decisions）；新增 RULE-08：写代码前必须搜索可复用组件 |
+| 2026-05-30 | **工具调研 + CodeBuddy 修复**：安装 Reasonix v0.53.2、分析 khazix-skills、对比 Agent 本地记忆系统、修复 CodeBuddy 安装损坏（重装 v2.100.0） |

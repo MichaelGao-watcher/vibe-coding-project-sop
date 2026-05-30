@@ -3,7 +3,7 @@
 > 本文件由 `scripts/build-experience-index.py` 自动生成。
 > 覆盖 troubleshooting / lessons-learned / decisions，统一搜索入口。
 
-> 当前收录 **242** 条记录（问题 106 + 经验 98 + 决策 38）。
+> 当前收录 **243** 条记录（问题 107 + 经验 98 + 决策 38）。
 
 ---
 
@@ -117,6 +117,7 @@
 | openpyxl 未安装 | 问题 | 报告相关 | qianniu_business_analytics | 临时绕过 | troubleshooting.md#L1091 |
 | 钉钉推送失败 | 问题 | 报告相关 | qianniu_business_analytics | 已知未修复（需用户侧配置） | troubleshooting.md#L1100 |
 | Windows Git Bash LF/CRLF 警告 | 问题 | 环境相关 | qianniu_business_analytics | 已知未修复（不影响功能） | troubleshooting.md#L1113 |
+| CodeBuddy 安装后 package.json 丢失导致命令不可用 | 问题 | 环境相关 | 母库 | 已修复 | troubleshooting.md#L1124 |
 | 纯 HTML+CSS+JS 项目无需 npm，双击 `index.html` 即可预览，但涉及 Web Worker（如... | 经验 | build-env / testing | blindfold-chess | INFO | lessons-learned.md#L14 |
 | 手写 IIFE 模块时，用 `window.ModuleName = Module` 暴露 API，内部私有变量用下划线... | 经验 | dom / api-design | blindfold-chess | WARNING | lessons-learned.md#L15 |
 | 浏览器集成测试用 TestRunner（自定义极简框架），保持与 Node 测试同一套断言 API，降低切换成本 | 经验 | testing | blindfold-chess | INFO | lessons-learned.md#L16 |
@@ -507,6 +508,7 @@
 - [问题] createAndDownload 返回失败 — `取数相关` → troubleshooting.md#L1078
 - [问题] openpyxl 未安装 — `报告相关` → troubleshooting.md#L1091
 - [问题] 钉钉推送失败 — `报告相关` → troubleshooting.md#L1100
+- [问题] CodeBuddy 安装后 package.json 丢失导致命令不可用 — `环境相关` → troubleshooting.md#L1124
 - [经验] 项目文档结构会随时间进化，"存档"或"恢复"操作前应先 `ls`/`glob` 确认当前文件系统现状 — `ai-workflow` → lessons-learned.md#L24
 - [经验] **删除功能必须同步删除对应测试**：移除 `showHints` / `multiPvSettin — `testing` → lessons-learned.md#L29
 - [经验] **焦点管理是盲棋产品的核心体验**：进入对局自动 `input.focus()`、引擎走完后恢复焦 — `ux` → lessons-learned.md#L30
@@ -585,7 +587,7 @@
 
 ## 按类型分组
 
-### 问题（106 条）
+### 问题（107 条）
 
 - AI 重复实现已有组件（棋盘/网格类 UI） → troubleshooting.md#L8
 - Stockfish 加载超时 / 引擎不启动 → troubleshooting.md#L19
@@ -607,7 +609,7 @@
 - vitest 报错：`Failed to resolve import "@tauri-apps/api/fs... → troubleshooting.md#L182
 - vitest 报错：`act is not a function` → troubleshooting.md#L191
 - vitest 报错：React 警告 `Cannot update a component while ren... → troubleshooting.md#L199
-- ... 还有 86 条
+- ... 还有 87 条
 
 ### 经验（98 条）
 

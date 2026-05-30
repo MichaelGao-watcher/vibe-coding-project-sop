@@ -1121,6 +1121,17 @@
 
 ---
 
+### CodeBuddy 安装后 package.json 丢失导致命令不可用 [来源:母库 @2026-05-30]
+
+| | 内容 |
+|---|---|
+| **状态** | 已修复 |
+| **现象** | `codebuddy` 和 `cbc` 命令提示 `zsh: command not found`；手动运行 bin 目录下的 codebuddy 文件提示 `no such file or directory` |
+| **原因** | npm 全局安装路径在 `~/.hermes/node/lib/` 下（Hermes 自带 Node.js 环境），安装过程中 package.json 丢失，导致 npm 无法识别已安装的包，bin 链接未创建 |
+| **解决** | 1. 删除损坏的安装目录：`rm -rf ~/.hermes/node/lib/node_modules/@tencent-ai/codebuddy-code`<br>2. 重新安装：`npm install -g @tencent-ai/codebuddy-code`<br>3. 验证：`which codebuddy` 和 `codebuddy --version` |
+
+---
+
 *新增条目时复制上方模板，按"错误关键词"作为标题，便于快速搜索。*
 
 ---

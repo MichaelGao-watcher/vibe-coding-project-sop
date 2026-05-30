@@ -447,3 +447,30 @@
 - starter/ 目录需同步更新（触发词、gh api 改动）
 - 探索 Playwright MCP 其他用途
 - 完成 P3 待办：--dry-run 和 --since 参数
+
+---
+
+## 2026-05-30
+
+**会话类型**：工具调研 + CodeBuddy 修复
+
+**完成内容**：
+1. **Mac 邮箱 SSL 代理问题分析**：Clash Verge 环境下 Mail.app 无法绕过代理，提供配置直连规则方案
+2. **DeepSeek-Reasonix 安装**：`npm install -g reasonix`，v0.53.2，DeepSeek 原生 AI 编码 agent，核心卖点是前缀缓存稳定性
+3. **khazix-skills 仓库分析**：5 个 Skills + 1 个 Prompt，详细分析 neat-freak（洁癖）对母库机制的适用性
+4. **Agent 本地记忆系统对比**：
+   - CodeBuddy：完整记忆系统（4 类型 + Auto Memory）
+   - Reasonix：仅会话记录
+   - Aider：无记忆系统
+   - OpenCode：仅 AGENTS.md 规则文件
+   - 结论：母库机制在 OpenCode/Aider/Reasonix 上是必要的
+5. **CodeBuddy 安装修复**：package.json 丢失导致 bin 链接缺失，`npm install -g @tencent-ai/codebuddy-code` 重装 v2.100.0
+
+**关键决策**：
+- neat-freak 的"尺寸体检"和"变更影响矩阵"可借鉴到母库机制
+- CodeBuddy 的记忆系统最接近 Claude Code，可作为参考
+
+**遗留问题 / 下轮开始点**：
+- 继续分析 khazix-skills 剩余 4 个 Skill
+- 完成 P3 待办：--dry-run 和 --since 参数
+- 探索 Playwright MCP 其他用途
