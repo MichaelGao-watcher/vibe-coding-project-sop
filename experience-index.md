@@ -3,7 +3,7 @@
 > 本文件由 `scripts/build-experience-index.py` 自动生成。
 > 覆盖 troubleshooting / lessons-learned / decisions，统一搜索入口。
 
-> 当前收录 **243** 条记录（问题 109 + 经验 101 + 决策 33）。
+> 当前收录 **251** 条记录（问题 109 + 经验 108 + 决策 34）。
 
 ---
 
@@ -221,6 +221,13 @@
 | Hermes Agent 自带完整的 Node.js 环境（`~/.hermes/node/`），安装时会通过 `~/.... | 经验 | build-env |  | WARNING | lessons-learned.md#L205 |
 | 不要在 pipx 安装的 Python 包源码目录中执行 `git pull`，除非确认没有本地修改。Git 合并冲突会... | 经验 | build-env |  | WARNING | lessons-learned.md#L206 |
 | nvm（Node Version Manager）是隔离 Node.js 环境的最佳方案。安装后每个项目的 Node.j... | 经验 | build-env |  | INFO | lessons-learned.md#L207 |
+| 骨架母库的 `skeleton-manifest.json` 应始终与实际基础设施文件保持一致。新增或删除基础设施文件时... | 经验 | project-structure |  | INFO | lessons-learned.md#L208 |
+| 同类功能的索引脚本应统一合并，避免冗余。`build-troubleshooting-index.py` 和 `buil... | 经验 | indexing |  | INFO | lessons-learned.md#L209 |
+| status.md 的待办清理机制：存档时先删除所有 `[x]` 已打勾的待办，再勾选本轮完成的待办，下一轮存档时这些 ... | 经验 | project-structure |  | INFO | lessons-learned.md#L210 |
+| status.md 的技术债务机制：技术债务 = 需要解决但暂时搁置的难题，包含问题、影响、解决路径、时间表、状态。解决... | 经验 | project-structure |  | INFO | lessons-learned.md#L211 |
+| Figma 是传统设计工具（类似 Photoshop），需要手动绘制 UI。2026 年新增 MCP Server，让 ... | 经验 | ai-workflow |  | INFO | lessons-learned.md#L212 |
+| v0 by Vercel 是 AI UI 生成工具，输入自然语言 prompt 生成 React 组件代码。输出是真实的... | 经验 | ai-workflow |  | INFO | lessons-learned.md#L213 |
+| CodeWhale vs Reasonix：两者都是 DeepSeek 原生的终端编码 agent。CodeWhale ... | 经验 | ai-workflow |  | INFO | lessons-learned.md#L214 |
 | ADR-001：前端技术栈选型 | 决策 | 架构决策 | blindfold-chess | — | decisions.md#L8 |
 | ADR-002：测试框架选型 | 决策 | 架构决策 | blindfold-chess | — | decisions.md#L22 |
 | ADR-003：AI 开发方式与批次划分 | 决策 | 架构决策 | blindfold-chess | — | decisions.md#L36 |
@@ -254,6 +261,7 @@
 | ADR-004：日期时间格式（T00:00:00+08:00，禁用 23:59:59） | 决策 | 架构决策 | qianniu_business_analytics | — | decisions.md#L410 |
 | ADR-005：报告形态（Markdown 四段式，单店/多店统一） | 决策 | 架构决策 | qianniu_business_analytics | — | decisions.md#L424 |
 | ADR-017：聚焦 Excel 驱动流，API 驱动流暂不投入 [来源:qianniu_business_analyt... | 决策 | 架构决策 | qianniu_business_analytics | — | decisions.md#L442 |
+| ADR-020：状态文档机制重构（待办清理 + 技术债务表格化） [母库 @2026-05-30] | 决策 | 架构决策 |  | — | decisions.md#L470 |
 
 ---
 
@@ -358,6 +366,7 @@
 - [经验] 不要一次性加载所有完整 `TraceItem` 到前端（内存 + DOM 渲染压力大） — `data / performance` → lessons-learned.md#L96
 - [经验] Hermes Agent 自带完整的 Node.js 环境（`~/.hermes/node/`），安 — `build-env` → lessons-learned.md#L205
 - [经验] nvm（Node Version Manager）是隔离 Node.js 环境的最佳方案。安装后每个 — `build-env` → lessons-learned.md#L207
+- [经验] v0 by Vercel 是 AI UI 生成工具，输入自然语言 prompt 生成 React 组 — `ai-workflow` → lessons-learned.md#L213
 - [决策] ADR-002：为什么前端用 React（而非 Vue/Svelte）？ — `架构决策` → decisions.md#L160
 - [决策] ADR-019：Node.js 环境隔离方案（nvm + 双 Node.js） [母库 @2026- — `架构决策` → decisions.md#L354
 
@@ -373,6 +382,7 @@
 - [问题] HuggingFace 模型下载连接超时 `curl: (28) Could not connect — `存档提示` → troubleshooting.md#L647
 - [经验] 国内下载 HuggingFace 模型时，ModelScope 是比 hf-mirror 更可靠的  — `build-env` → lessons-learned.md#L171
 - [经验] Windows 非管理员运行 PowerShell 脚本时，`New-NetFirewallRule — `build-env` → lessons-learned.md#L172
+- [经验] CodeWhale vs Reasonix：两者都是 DeepSeek 原生的终端编码 agent。 — `ai-workflow` → lessons-learned.md#L214
 
 ### Git / GitHub
 
@@ -422,6 +432,7 @@
 - [经验] `cargo check --lib` 不需要链接，可以在中文路径直接跑；`cargo test - — `cross-platform / build-env` → lessons-learned.md#L84
 - [经验] 国内下载 HuggingFace 模型时，ModelScope 是比 hf-mirror 更可靠的  — `build-env` → lessons-learned.md#L171
 - [经验] Windows 非管理员运行 PowerShell 脚本时，`New-NetFirewallRule — `build-env` → lessons-learned.md#L172
+- [经验] CodeWhale vs Reasonix：两者都是 DeepSeek 原生的终端编码 agent。 — `ai-workflow` → lessons-learned.md#L214
 
 ### Windows / PowerShell
 
@@ -558,6 +569,11 @@
 - [经验] **修复**：遍历 `state.decisions`，每项在 `scanResults` 中查找详 — `pagination / state-management` → lessons-learned.md#L106
 - [经验] **教训**：在分页/懒加载架构中，**用户操作集合（decisions）是主数据源，展示数据（sc — `pagination / architecture` → lessons-learned.md#L107
 - [经验] `gh api --paginate --slurp` 返回嵌套数组 `[page1, page2, — `api-design` → lessons-learned.md#L204
+- [经验] 骨架母库的 `skeleton-manifest.json` 应始终与实际基础设施文件保持一致。新增 — `project-structure` → lessons-learned.md#L208
+- [经验] 同类功能的索引脚本应统一合并，避免冗余。`build-troubleshooting-index.p — `indexing` → lessons-learned.md#L209
+- [经验] status.md 的待办清理机制：存档时先删除所有 `[x]` 已打勾的待办，再勾选本轮完成的待办 — `project-structure` → lessons-learned.md#L210
+- [经验] status.md 的技术债务机制：技术债务 = 需要解决但暂时搁置的难题，包含问题、影响、解决路径 — `project-structure` → lessons-learned.md#L211
+- [经验] Figma 是传统设计工具（类似 Photoshop），需要手动绘制 UI。2026 年新增 MCP — `ai-workflow` → lessons-learned.md#L212
 - [决策] ADR-001：前端技术栈选型 — `架构决策` → decisions.md#L8
 - [决策] ADR-002：测试框架选型 — `架构决策` → decisions.md#L22
 - [决策] ADR-003：AI 开发方式与批次划分 — `架构决策` → decisions.md#L36
@@ -584,6 +600,7 @@
 - [决策] ADR-004：日期时间格式（T00:00:00+08:00，禁用 23:59:59） — `架构决策` → decisions.md#L410
 - [决策] ADR-005：报告形态（Markdown 四段式，单店/多店统一） — `架构决策` → decisions.md#L424
 - [决策] ADR-017：聚焦 Excel 驱动流，API 驱动流暂不投入 [来源:qianniu_busin — `架构决策` → decisions.md#L442
+- [决策] ADR-020：状态文档机制重构（待办清理 + 技术债务表格化） [母库 @2026-05-30] — `架构决策` → decisions.md#L470
 
 ---
 
@@ -613,7 +630,7 @@
 - vitest 报错：React 警告 `Cannot update a component while ren... → troubleshooting.md#L199
 - ... 还有 89 条
 
-### 经验（101 条）
+### 经验（108 条）
 
 - 纯 HTML+CSS+JS 项目无需 npm，双击 `index.html` 即可预览，但涉及 Web Wor... → lessons-learned.md#L14
 - 手写 IIFE 模块时，用 `window.ModuleName = Module` 暴露 API，内部私有变... → lessons-learned.md#L15
@@ -635,9 +652,9 @@
 - **i18n 分散架构必然导致翻译遗漏**：当项目同时存在"全局字典 + 模块私有字典 + 硬编码"三种翻译方... → lessons-learned.md#L31
 - **JS 中的硬编码人类可读字符串是翻译遗漏的重灾区**：HTML 中的 `data-i18n` 至少能被肉眼... → lessons-learned.md#L32
 - **复制粘贴是 i18n 错误的常见来源**：将中文值直接粘贴进英文字典，或反之，属于低级但高频的疏忽 → lessons-learned.md#L33
-- ... 还有 81 条
+- ... 还有 88 条
 
-### 决策（33 条）
+### 决策（34 条）
 
 - ADR-001：前端技术栈选型 → decisions.md#L8
 - ADR-002：测试框架选型 → decisions.md#L22
@@ -659,4 +676,4 @@
 - ADR-008：默认深色主题而非跟随系统 → decisions.md#L240
 - ADR-009：全选全部功能的技术方案 → decisions.md#L252
 - ADR-010：路径交互设计 — 文本可点击 vs 独立按钮 → decisions.md#L264
-- ... 还有 13 条
+- ... 还有 14 条

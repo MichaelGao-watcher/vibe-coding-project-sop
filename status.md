@@ -20,6 +20,8 @@
 
 ## 待办 📋
 
+> **清理规则**：存档时先删除所有 `[x]` 已打勾的待办，再勾选本轮完成的待办。
+
 ### 优先级 3 — 优化
 - [ ] 脚本增加 `--dry-run` 模式，预览变更但不写入
 - [ ] 脚本增加 `--since` 参数，只同步某日期后的新增内容
@@ -31,14 +33,14 @@
 
 ## 技术债务 🏚️
 
-### 临时 workaround
-- 无
+> 技术债务 = 需要解决但暂时搁置的难题。解决后记录到 `lessons-learned.md`，并从本表删除。
 
-### 待重构模块
-- 无
+| 问题 | 影响 | 解决路径 | 预计时间 | 状态 |
+|------|------|---------|---------|------|
+| sync-knowledge.py 的 Markdown 解析是启发式的 | 可能漏掉某些格式变体（如嵌套列表、特殊字符）| 引入 `markdown` 库进行精确解析 | 未来（暂无具体时间）| 搁置 |
 
-### 已知缺陷（暂不修复）
-- `scripts/sync-knowledge.py` 的 Markdown 解析是启发式的，可能无法完美处理所有格式变体。暂时够用，未来如需更精确的解析可考虑引入 `markdown` 库。
+### 已解决债务
+<!-- 解决后从上方表格删除，追加到这里，并记录到 lessons-learned.md -->
 
 ---
 
@@ -48,26 +50,6 @@
 - **编译/构建命令**：`python scripts/sync-knowledge.py`
 - **测试命令**：手动单元测试（见 session-log）
 - **已知限制**：Windows 环境需使用 `python` 而非 `python3`
-
----
-
-## 关键代码入口
-
-```
-vibe-coding-project-sop/
-├── config/
-│   └── github-sync.json      # 跨项目同步配置
-├── scripts/
-│   └── sync-knowledge.py     # 自动化同步脚本
-├── templates/
-│   ├── decisions.md          # 决策模板（含跨项目来源格式）
-│   ├── lessons-learned.md    # 经验模板（含跨项目来源格式）
-│   ├── troubleshooting.md    # 问题模板（含跨项目来源格式）
-│   └── vibe-coding-sop.md    # 五阶段 SOP（含附录 B 知识同步）
-├── AGENTS.md                 # 硬规则（含 RULE-05、3.7 知识同步指令）
-├── skeleton-manifest.json    # 骨架元数据（含 knowledgeSync 段）
-└── status.md                 # 本文件
-```
 
 ---
 
@@ -91,38 +73,7 @@ vibe-coding-project-sop/
 
 | 日期 | 更新内容 |
 |------|---------|
-| 2026-05-21 | 新增跨项目知识同步 SOP：config/github-sync.json、scripts/sync-knowledge.py、AGENTS.md RULE-05、vibe-coding-sop.md 附录 B、模板跨项目来源格式、skeleton-manifest.json knowledgeSync 段 |
-| 2026-05-21 | **首次知识同步成功**：从 MichaelGao1999 的 blindfold-chess、french-exit 仓库拉取知识，合并为母库。decisions.md 304行、lessons-learned.md 94条经验、troubleshooting.md 238行。发现并修复了 lessons-learned 模板内容混入问题，脚本增加 `_is_valid_lesson` 过滤逻辑。 |
-| 2026-05-21 | **lessons-learned 标签化完成**：94 条经验全部打标签（CRITICAL 8 条 / WARNING 33 条 / INFO 53 条），新增 `templates/anti-patterns-checklist.md` 作为阶段二设计自检模板。母库表格增加「标签」「严重度」两列。
-| 2026-05-21 | 清理一次性文件 `docs/tagging-session.md` 及空目录 `docs/`。修正 `status.md` 触发词「存档」误写为「存储」的问题。
-| 2026-05-22 | **同步脚本分支自适应**：修复 `vibe-coding-project-sop` 因默认分支为 `master` 而被 404 跳过的问题。脚本优先读取 GitHub API 返回的 `default_branch`，不再硬编码 `main`。
-| 2026-05-22 | **新增 syncFrom 母库分发模式**：`config/github-sync.json` 新增 `syncFrom` 字段，配置后脚本只从指定单一仓库拉取（分发模式），与原有聚合模式（遍历所有仓库）共存。验证通过：聚合模式遍历 3 个仓库，分发模式只拉取母库。
-| 2026-05-22 | **AGENTS 分离设计**：新建 `templates/agents-for-others.md`，将母库专用指令（3.7 同步知识）与其他项目专用指令（3.7 母库经验）物理分离。母库 AGENTS.md 保留聚合指令，其他项目按需插入分发指令。
-| 2026-05-22 | **文档用词修正**：统一将"子项目"改为"其他项目"，明确母库与其他项目为平级目录关系，消除物理层级误解。更新 `AGENTS.md`、`templates/agents-for-others.md`、`README.md`。
-
----
-
-## 存档提示
-
-**用户说「存档」时**，AI 应回顾本轮会话内容，更新本文件的以下章节：
-- **当前阶段**：如有进展，更新百分比和下一步
-- **进度总览**：更新各模块状态图标
-- **待办**：勾选已完成项，新增下轮待办
-- **更新记录**：追加本轮更新摘要
-
-| 2026-05-22 | 修复恢复指令增加 git pull 步骤；安装 Superpowers B 方案（14 skills 符号链接 + Kimi 适配 patch）；将跨项目知识同步机制完整写入 blindfold-chess（config/github-sync.json、scripts/sync-knowledge.py、AGENTS.md RULE-07、存档/恢复/同步知识触发词、lessons-learned/troubleshooting 来源格式标准化） |
-| 2026-05-22 | **老设备 LLM 服务部署完成**：llama.cpp + Qwen2.5-0.5B 在 i7-7500U/8GB 上运行，速度 20 tokens/s，API 端点 192.168.18.122:11434。相关脚本整理到 llm-server/ 目录。
-| 2026-05-23 | **GitHub push 通路修复**：诊断 SSH `Permission denied (publickey)`，放弃 SSH 密钥方案，安装 GitHub CLI (v2.69.0) 到 `~/bin/`，通过 `HTTPS_PROXY` 完成 `gh auth login`，切换 git 远程 URL 为 HTTPS，`gh auth setup-git` 管理凭证。fetch 测试通过，push 恢复。
-| 2026-05-26 | **CBC 状态行配置**：创建 `~/.codebuddy/statusline.sh`（显示模型、目录、Git 分支、费用、耗时），更新 `~/.codebuddy/settings.json` 启用状态行；删除 Superpowers skills 待办（用户决定不使用） |
-| 2026-05-26 | **存档**：用户查询文件树、Git 状态后执行存档。提交未上传变更（AGENTS.md、scripts/init-skeleton.py、templates/.gitattributes） |
-| 2026-05-26 | **init-skeleton.py Python 3.9 兼容修复**：修复 `str | None` → `Optional[str]` 等类型注解，支持 macOS 12 默认 Python 3.9；部署到 blindfold-chess（+`.gitattributes`）和 french-exit（+`vibe-coding-sop.md` + `.gitattributes`） |
-| 2026-05-28 | **Playwright MCP 安装配置**：评估 trycua/cua、对比 Playwright/Selenium/Kimi WebBridge，安装 Playwright Chromium + MCP (v0.0.75, 23 tools)，创建 opencode.json 注册 MCP，待重启生效 |
-| 2026-05-28 | **Playwright MCP 浏览器切换**：修改 opencode.json 从 chromium 切换到 msedge，移除 --headless 参数显示浏览器窗口，安装 Chrome for Testing 浏览器，测试天猫后台自动化流程（生意参谋登录页面已显示） |
-| 2026-05-28 | **天猫后台搁置 + 目录清理**：因平台警告搁置天猫自动化项目，Playwright 配置保留；删除 .playwright-mcp 缓存、.DS_Store、deepseek-update.patch、.backup 目录、llm-server 旧文件（Modelfile、ollama-setup、*.bak） |
-| 2026-05-28 | **自然语言同步经验**：创建 `scripts/pull.py` 通用拉取脚本，简化触发词为「同步经验」，为 6 个项目配置母库路径注释和 github-sync.json |
-| 2026-05-29 | **触发词统一**：场景 A（拉取母库）→ `拉取母库`/`拉取经验`/`更新经验`；场景 B（聚合到母库）→ `聚合`；删除 `同步经验`/`同步知识`/`聚合知识`/`母库经验` 歧义词。涉及 AGENTS.md、CLAUDE.md、skeleton-manifest.json、pull.py 等 11 个文件 |
-| 2026-05-29 | **sync-knowledge.py 改用 gh api**：删除 token 配置，API 调用全走 `gh api`（自动复用 gh 登录态），修复 Python 3.9 类型注解兼容性 |
-| 2026-05-29 | **统一经验索引**：新建 `build-experience-index.py`，生成 `experience-index.md`（241 条，覆盖 troubleshooting + lessons-learned + decisions）；新增 RULE-08：写代码前必须搜索可复用组件 |
 | 2026-05-30 | **工具调研 + CodeBuddy 修复**：安装 Reasonix v0.53.2、分析 khazix-skills、对比 Agent 本地记忆系统、修复 CodeBuddy 安装损坏（重装 v2.100.0） |
 | 2026-05-30 | **Node.js 环境隔离**：修复 hermes-agent 合并冲突（v0.14.0→v0.15.2）、安装 nvm + Node.js 22、清理 Hermes Node.js 泄漏、重新安装 CodeBuddy 到 nvm 管理的独立环境 |
 | 2026-05-30 | **完整性修复**：删除冗余 `build-troubleshooting-index.py` + `troubleshooting-index.md`（被 `experience-index.md` 替代）；`skeleton-manifest.json` 补充 `.gitattributes` + `config/github-sync.json`；`config/github-sync.json` 的 `branch` 设为占位字段（由运行时自动获取）；`templates/` 补齐 `TRIGGERS.md`；`opencode.json` Playwright 配置禁用（天猫已搁置） |
+| 2026-05-30 | **状态文档机制重构**：重构 status.md 待办机制（存档时先删除已打勾，再勾选本轮完成）、重构技术债务章节（表格化 + 已解决债务）、新增 RULE-09（技术债务解决后记录到 lessons-learned.md） |

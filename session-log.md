@@ -527,3 +527,29 @@
 
 **遗留问题 / 下轮开始点**：
 - 完成 P3 待办：--dry-run 和 --since 参数
+
+---
+
+## 2026-05-30 第三轮
+
+**会话类型**：工具调研 + 状态文档机制重构
+
+**完成内容**：
+1. **工具调研**：
+   - CodeWhale vs Reasonix 对比：两者都是 DeepSeek 原生终端编码 agent，CodeWhale 功能更全面（多 provider、Docker、VSCode 扩展），Reasonix 缓存优化更极致（99.82% 命中率）
+   - Figma 入门介绍：传统设计工具（类似 Photoshop），2026 年新增 MCP Server 让 AI agent 读取设计稿生成代码
+   - v0 by Vercel：AI UI 生成工具，输入 prompt 生成 React 组件代码，免费版 $5 积分/月
+2. **状态文档机制重构**：
+   - 分析 status.md 问题：待办无清理规则、技术债务设计有误
+   - 制定修复方案：待办清理规则 + 技术债务表格化
+   - 执行修复：重构 status.md 待办章节、技术债务章节、更新 AGENTS.md 存档指令、新增 RULE-09
+   - 重建 experience-index.md（245 条）
+
+**关键决策**：
+- 待办清理规则：存档时先删除 `[x]` 已打勾，再勾选本轮完成
+- 技术债务机制：表格化（问题+影响+解决路径+时间表+状态），解决后记录到 lessons-learned.md
+- 新增 RULE-09：技术债务解决后必须记录到经验文档
+
+**遗留问题 / 下轮开始点**：
+- 完成 P3 待办：--dry-run 和 --since 参数
+- 探索 Playwright MCP 其他用途

@@ -207,3 +207,8 @@
 | 110 | TAG:build-env | INFO | nvm（Node Version Manager）是隔离 Node.js 环境的最佳方案。安装后每个项目的 Node.js 版本和全局包完全独立，互不干扰 [母库 @2026-05-30] | 环境配置 |
 | 111 | TAG:project-structure | INFO | 骨架母库的 `skeleton-manifest.json` 应始终与实际基础设施文件保持一致。新增或删除基础设施文件时，必须同步更新 manifest 的 `infrastructure.files` 数组，否则 `init-skeleton.py` 初始化的新项目会缺失文件。 [母库 @2026-05-30] | skeleton-manifest.json |
 | 112 | TAG:indexing | INFO | 同类功能的索引脚本应统一合并，避免冗余。`build-troubleshooting-index.py` 和 `build-experience-index.py` 功能重叠时，保留覆盖范围更广的脚本，删除被覆盖的脚本。 [母库 @2026-05-30] | scripts/ |
+| 113 | TAG:project-structure | INFO | status.md 的待办清理机制：存档时先删除所有 `[x]` 已打勾的待办，再勾选本轮完成的待办，下一轮存档时这些 `[x]` 会被删除。待办列表始终保持"未完成"状态。 [母库 @2026-05-30] | status.md |
+| 114 | TAG:project-structure | INFO | status.md 的技术债务机制：技术债务 = 需要解决但暂时搁置的难题，包含问题、影响、解决路径、时间表、状态。解决后从债务表删除，追加到「已解决债务」，并记录到 lessons-learned.md。 [母库 @2026-05-30] | status.md |
+| 115 | TAG:ai-workflow | INFO | Figma 是传统设计工具（类似 Photoshop），需要手动绘制 UI。2026 年新增 MCP Server，让 AI agent 可以读取设计稿生成代码。适合需要设计→代码工作流的团队。 [母库 @2026-05-30] | 工具调研 |
+| 116 | TAG:ai-workflow | INFO | v0 by Vercel 是 AI UI 生成工具，输入自然语言 prompt 生成 React 组件代码。输出是真实的 TypeScript + JSX + Tailwind CSS 代码，可以复制到任何项目中复用。免费版 $5 积分/月，够学习和做 2-3 个小项目。 [母库 @2026-05-30] | 工具调研 |
+| 117 | TAG:ai-workflow | INFO | CodeWhale vs Reasonix：两者都是 DeepSeek 原生的终端编码 agent。CodeWhale 功能更全面（支持多 provider、Docker、VSCode 扩展），Reasonix 缓存优化更极致（99.82% 命中率）。纯 DeepSeek 用户选 Reasonix，需要灵活切换模型选 CodeWhale。 [母库 @2026-05-30] | 工具调研 |
