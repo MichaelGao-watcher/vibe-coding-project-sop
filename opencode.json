@@ -4,8 +4,8 @@
     "playwright": {
       "type": "local",
       "command": ["npx", "-y", "@playwright/mcp", "--browser", "msedge"],
-      "enabled": true,
-      "description": "Browser automation via Playwright. Can navigate, click, type, screenshot, and extract data from web pages."
+      "enabled": false,
+      "description": "Browser automation via Playwright (disabled — shelved project). Can navigate, click, type, screenshot, and extract data from web pages."
     }
   }
 }

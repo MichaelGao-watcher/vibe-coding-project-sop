@@ -47,7 +47,7 @@ These are natural-language commands parsed from `AGENTS.md` that trigger multi-s
 - **RULE-02**: Phase boundaries = session boundaries. Stop after each phase, don't push into the next.
 - **ARCHIVE-01/02**: "存档" triggers confirmation-first archive workflow; never skip confirmation.
 - **RULE-05**: Knowledge sync must backup before merge, tag every entry with `[来源:repo @date]`.
-- **RULE-07**: `troubleshooting-index.md` is auto-generated, never edit it manually.
+- **RULE-07**: `experience-index.md` is auto-generated (by `scripts/build-experience-index.py`), never edit it manually.
 - **RULE-08**: Before adding new modules, search for existing reusable components. Never rewrite what already exists.
 
 ## Git conventions

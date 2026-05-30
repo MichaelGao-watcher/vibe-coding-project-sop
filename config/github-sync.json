@@ -9,7 +9,7 @@
     "lessons-learned.md",
     "troubleshooting.md"
   ],
-  "branch": "main",
+  "branch": "auto",  # 实际由 sync-knowledge.py 调用 GitHub API 获取 default_branch，此字段仅作占位
   "backupBeforeMerge": true,
   "mergeStrategy": {
     "lessonsLearned": {

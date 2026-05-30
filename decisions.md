@@ -351,160 +351,18 @@
 
 ---
 
----
-
-## 2026-05-22 — 将跨项目知识同步机制部署到 blindfold-chess
-
-**背景**：blindfold-chess 已使用 vibe-coding-project-sop 的文档骨架，但缺少跨项目知识同步的"拉取"能力（只有母库能聚合，子项目无法反向获取）。
-
-**决策**：将母库的 sync-knowledge.py 完整复制到 blindfold-chess，并配置 syncFrom 指向母库，使子项目也能从母库聚合经验。
-
-**范围**：
-- 复制 config/github-sync.json + scripts/sync-knowledge.py
-- AGENTS.md 增加 RULE-07 和同步知识触发词
-- 标准化 lessons-learned / troubleshooting 的来源格式
-- 不复制 init-skeleton.py / templates/ / starter/（应用项目不需要）
-
-**后果**：blindfold-chess 的 AI 规则手册现在支持"同步知识"指令，经验可以双向流动（子项目积累 → 回写母库 → 其他子项目获取）。
-
----
-
-## 2026-05-22 — 老设备 LLM 服务部署：Ollama → llama.cpp
-
-**背景**：用户计划将闲置老设备（i7-7500U/8GB/无独显）配置为局域网 LLM 服务器，供新 MacBook Air 的 CLI Agent 调用。
-
-**决策**：放弃 Ollama 方案，改用 llama-cpp 方案。
-
-**原因**：
-1. Ollama Windows 安装包（2GB）只能从 GitHub 下载，而 GitHub 在该网络环境下完全超时
-2. llama.cpp 的 Windows 二进制仅 18MB，可通过 GitHub 加速镜像（gh.llkk.cc）在数分钟内下载完成
-3. 模型文件（.gguf）可通过 ModelScope CDN 以 2.5MB/s 的速度快速下载
-
-**范围**：
-- 使用 llama.cpp server 模式启动 OpenAI 兼容 API 服务
-- 加载 Qwen2.5-0.5B-Instruct（Q4_K_M）模型，内存占用约 450MB
-- 配置环境变量 OLLAMA_HOST=0.0.0.0:11434（保留兼容命名）
-- 创建一键启动脚本 start-llm-server.ps1
-- 整理所有相关文件到 llm-server/ 目录
-
-**后果**：老设备成功运行局域网 LLM 服务，推理速度约 20 tokens/s（纯 CPU），MacBook Air 可通过标准 OpenAI API 客户端连接。
-
-## ADR-009：Troubleshooting 索引采用独立文件 + 行号链接
-
-**日期**：2026-05-24
-**状态**：已采纳
-**上下文**：troubleshooting.md 已达 288 行/27 条目，AI 恢复时按关键词搜索效率低，且难以获取技术栈全景。
-
-**决策**：
-1. 创建 `scripts/build-troubleshooting-index.py` 自动生成 `troubleshooting-index.md`
-2. 索引为独立文件，不插入 troubleshooting.md 顶部
-3. 定位使用行号链接 `troubleshooting.md#L{line}`
-
-**考量**：
-
-| 方案 | 优点 | 缺点 |
-|------|------|------|
-| **A. 独立文件**（采纳） | AI 只需读 ~110 行索引；零内容污染；重建不影响原文件格式 | 多一个文件 |
-| B. 插入同文件顶部 | AI 读一个文件即可 | 必须读完 288+ 行才能看到索引；每次重建需改写原文件头部 |
-| **行号链接**（采纳） | 100% 可靠；不依赖 GitHub 锚点算法 | 编辑原文件后需重建索引 |
-| C. 标题锚点 | 语义化 | GitHub 对中文锚点生成规则复杂且不稳定 |
-
-**后果**：
-- AGENTS.md 恢复指令更新为「先读 troubleshooting-index.md 快速定位，再读 troubleshooting.md 详情」
-- 每次修改 troubleshooting.md 后需运行脚本重建索引（未来可集成到 sync-knowledge.py 自动重建）
-
-## ADR-017：init-skeleton.py 保持 Python 3.9 兼容
-
-**日期**：2026-05-26
-**状态**：已采纳
-**上下文**：macOS 12 默认 Python 3.9.6，不支持 `str | None` 和 `list[str]` 等 3.10+ 类型注解语法。用户运行 `init-skeleton.py` 直接报错 `TypeError: unsupported operand type(s) for |`。
-
-**决策**：
-1. 将所有 3.10+ 类型注解替换为 3.6+ 兼容写法
-2. 具体替换：
-   - `str | None` → `Optional[str]`
-   - `Path | None` → `Optional[Path]`
-   - `list[str]` → `List[str]`
-   - `list[tuple[str, str]]` → `List[Tuple[str, str]]`
-3. 新增 `from typing import List, Optional, Tuple`
-
-**理由**：
-1. macOS 12 是当前广泛使用的版本，默认 Python 3.9 无法直接升级
-2. 强制用户升级 Python 增加了使用门槛，与骨架"低门槛初始化"的定位冲突
-3. `typing` 模块的旧语法在所有 Python 3.x 版本中都可运行，无需额外依赖
-4. 后续新脚本也应默认采用 Python 3.9 兼容写法，直到项目明确要求 3.10+
-
-**后果**：
-- 脚本兼容性：Python 3.6 ~ 3.13 均可运行
-- 代码可读性略有下降（`Optional[str]` vs `str | None`），但这是向后兼容的必要代价
----
-
-## ADR-017：假删除模式通过环境变量 `FRENCH_EXIT_DRY_RUN` 控制 [来源:french-exit @2026-05-22] [来源:french-exit @2026-05-29]
+## ADR-019：Node.js 环境隔离方案（nvm + 双 Node.js） [母库 @2026-05-30]
 
 | 字段 | 内容 |
 |------|------|
-| **日期** | 2026-05-22 |
-| **问题** | 用户需要在测试/试用期间验证功能流程，但不想真正删除文件 |
-| **候选方案** | A. 在前端添加"测试模式"开关<br>B. 在 `ResourceConfig` 中添加 `dry_run` 字段<br>C. 通过环境变量 `FRENCH_EXIT_DRY_RUN` 控制后端行为 |
-| **决策** | 方案 C：环境变量控制 |
-| **理由** | 1. 环境变量在启动时确定，用户不会在界面上误触切换<br>2. 不需要修改前端 UI 和 IPC 接口<br>3. `DeleteExecutor` 在 `new()` 时读取环境变量，零侵入现有调用链<br>4. 测试模式与正常模式物理隔离，降低误操作风险 |
-| **后果** | 需创建 `test-run.bat` 脚本方便用户启动测试模式；环境变量对非技术用户不够直观 |
-| **可逆性** | 可逆。移除环境变量读取逻辑即可恢复纯正常模式 |
+| **日期** | 2026-05-30 |
+| **问题** | Hermes 自带的 Node.js 污染用户 PATH，导致 `npm install -g` 安装到 Hermes 目录，两者混在一起 |
+| **候选方案** | A. 两个 Node.js（nvm + Hermes 各自独立）<br>B. 只改 npm prefix（共用 Node.js，包分离） |
+| **决策** | 方案 A：安装 nvm 管理用户 Node.js，与 Hermes 的 Node.js 完全隔离 |
+| **理由** | 1. 完全隔离，互不干扰<br>2. nvm 支持多版本管理，未来可灵活切换<br>3. 用户全局包安装到 `~/.nvm/versions/node/v22.22.3/lib/node_modules/`，Hermes 包仍在 `~/.hermes/node/lib/node_modules/`<br>4. 代价是两个 Node.js 共存，但各自独立 |
+| **后果** | 用户环境：`~/.nvm/versions/node/v22.22.3/bin/node`；Hermes 环境：`~/.hermes/node/bin/node`。两者完全隔离 |
+| **可逆性** | 高。删除 `~/.nvm/` 目录、恢复 `~/.zshrc` 中的 PATH 即可回退 |
 
-*新增决策时复制上方模板，填写后追加到文件末尾。*
-
----
-
-## ADR-017：扫描进度条采用后端全局加权进度计算 [来源:french-exit @2026-05-29]
-
-| 字段 | 内容 |
-|------|------|
-| **日期** | 2026-05-22 |
-| **问题** | 扫描实际耗时十分钟，进度条一秒就到 100%。用户完全无法判断真实扫描进度 |
-| **候选方案** | A. 前端维护 Scanner 进度 Map，按权重计算全局百分比<br>B. 后端 ScannerRegistry 计算全局加权进度，通过 IPC 推送<br>C. 放弃精确进度，改用"扫描中…"无限动画 |
-| **决策** | 方案 B：后端 ScannerRegistry 计算全局加权进度 |
-| **理由** | 1. 后端知道所有 Scanner 的列表和权重，计算最准确<br>2. 前端只需被动接收，逻辑最简<br>3. 权重分配是业务逻辑（反映各 Scanner 预估耗时），放在后端更合理<br>4. 方案 C 用户体验差，无法感知进度 |
-| **权重分配** | scanner-fs: 50%（全盘递归扫描，最重）<br>scanner-browser: 15%（SQLite 读取）<br>scanner-system: 15%（遍历 Recent/Temp）<br>scanner-chat/devtools/registry-sys/env: 各 5%（轻量检测） |
-| **后果** | 新增 `ScanProgress.global_percent: Option<u8>` 字段，`ProgressEvent::ScanProgress` 同步添加；7 个 scanner 实现 + 前端 `ScanPage.tsx` 全链路适配 |
-| **可逆性** | 可逆。前端保留回退逻辑（无 global_percent 时按旧方式计算局部进度） |
-
----
-
-## ADR-018：个人目录全量扫描 + 文件类型分类 [来源:french-exit @2026-05-29]
-
-| 字段 | 内容 |
-|------|------|
-| **日期** | 2026-05-29 |
-| **问题** | 入职日期作为过滤节点会遗漏"入职前下载但未修改"的个人文件。例如：2020 年下载的私人 PDF，在 2023 年入职后放到工作电脑 Desktop 上，修改日期仍然是 2020 年，按修改日期过滤会被漏掉 |
-| **候选方案** | A. 放弃日期过滤（对个人目录）<br>B. 多日期取 max（creation/modification/access）<br>C. 位置优先 + 日期兜底（个人目录全扫，其他目录按日期过滤）<br>D. 让用户选择 |
-| **决策** | 方案 C：位置优先 + 日期兜底 |
-| **理由** | 1. 个人目录（Desktop/Downloads/Documents）本身就是"个人数据"的强信号，日期过滤反而导致漏删<br>2. 其他位置（其他盘符、系统目录）按日期过滤可减少噪音<br>3. 方案 A 扫描量过大，方案 D 增加用户决策负担 |
-| **实现** | 1. 新增 `TraceItem.source` 字段（personal_desktop / personal_downloads / personal_documents / other）<br>2. 新增 `TraceItem.file_type` 字段（photo / video / audio / work_doc / code / archive / design / executable / temp / other）<br>3. scanner-fs：个人目录 `apply_date_filter=false`，其他目录 `apply_date_filter=true`<br>4. 精细去重：已扫描的个人目录在全盘扫描时跳过<br>5. 前端 ResultsPage：二级筛选 Tab（按文件类型）+ 按来源分组展示 |
-| **后果** | 个人目录文件量可能较大，但用户可按文件类型筛选，减少视觉噪音 |
-| **可逆性** | 可逆。修改 scanner-fs 的 scan() 方法即可回退 |
-
-*新增决策时复制上方模板，填写后追加到文件末尾。*
-
----
----
-
-## ADR-018：WebView2 安装模式选择 downloadBootstrapper [来源:french-exit @2026-05-29]
-
-**日期**：2026-05-29
-**状态**：已采纳
-**上下文**：需要确定 French Exit 安装器如何处理 WebView2 Runtime 依赖。目标用户环境可联网，Windows 10 1803+ / Windows 11 已预装 WebView2。
-
-**决策**：使用 `downloadBootstrapper` 模式（Tauri v2 默认）
-
-**理由**：
-1. 安装包最小（0 额外体积）
-2. Windows 10 1803+ / Windows 11 已预装 WebView2，无需额外操作
-3. 旧系统（Windows 7/8）用户联网时自动下载 WebView2
-4. 用户体验：双击安装包 → 下一步 → 完成
-
-**后果**：
-- 安装器需联网才能完成 WebView2 安装
-- 如果用户环境完全断网，需改用 `offlineInstaller`（+127MB）
 ---
 
 ## ADR-001：技术栈选型（Python 3 + requests） [来源:qianniu_business_analytics @2026-05-29]
@@ -593,4 +451,16 @@
 | **后果** | 正面：资源集中，Excel 流在短期内达到生产级。负面：API 取数自动化能力暂时缺失。 |
 | **可逆性** | **高**。API 流代码骨架已保留，接入真实 BASE_URL 和 Digest 刷新后即可恢复。 |
 
-*新增决策时复制上方模板，填写后追加到文件末尾。*
+---
+
+### ADR-2026-05-30：清理冗余索引脚本，补齐骨架 manifest
+
+| 字段 | 值 |
+|------|------|
+| **日期** | 2026-05-30 |
+| **问题** | 骨架完整性审查发现 5 个可改进点：1) 两个索引脚本共存（`build-troubleshooting-index.py` 内容被 `build-experience-index.py` 完全覆盖）；2) `skeleton-manifest.json` 遗漏 `.gitattributes` 和 `config/github-sync.json`；3) `config/github-sync.json` 的 `branch` 硬编码 `main` 但脚本已自适应；4) `templates/` 缺少 `TRIGGERS.md`（仅 `starter/` 有）；5) `opencode.json` Playwright 配置指向已搁置的天猫项目 |
+| **候选方案** | A. 全部修复：删除冗余、补齐 manifest、修复死配置、对齐模板、禁用死配置<br>B. 只修一部分 |
+| **决策** | **A. 全部修复** |
+| **理由** | 骨架作为母库，文件结构的一致性直接影响下游项目质量。冗余索引脚本会误导后续维护者；manifest 遗漏导致新项目初始化时缺文件；死配置分散注意力。一次性修干净，避免债务积累。 |
+| **后果** | 正面：母库骨架完整性提升，manifest 与实际基础设施一致。负面：无（均为清理性修改）。 |
+| **可逆性** | **高**。被删除的冗余脚本已在 Git 历史中；Playwright 配置仅 `enabled: false` 未删除。 |

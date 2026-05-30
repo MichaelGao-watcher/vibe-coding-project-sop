@@ -474,3 +474,37 @@
 - 继续分析 khazix-skills 剩余 4 个 Skill
 - 完成 P3 待办：--dry-run 和 --since 参数
 - 探索 Playwright MCP 其他用途
+
+---
+
+## 2026-05-30 第二轮
+
+**会话类型**：Hermes 修复 + Node.js 环境隔离
+
+**完成内容**：
+1. **Hermes Agent 恢复**：
+   - 发现 `~/.hermes/hermes-agent/` 目录被重命名为 `hermes-agent.bak`
+   - 将备份目录重命名回原位置
+   - 修复 `__init__.py` 中的 Git 合并冲突（保留 v0.15.1）
+   - 发现 50+ 个冲突文件后，改用 `pipx uninstall && pipx install` 重新安装
+   - Hermes 升级到 v0.15.2
+2. **Node.js 环境隔离**：
+   - 安装 nvm（Node Version Manager）
+   - 使用 nvm 安装 Node.js 22（v22.22.3）
+   - 从 `~/.zshrc` 移除 Hermes Node.js PATH
+   - 删除 `~/.local/bin/` 中指向 Hermes 的 node/npm/npx 符号链接
+   - 重新安装 CodeBuddy 到 nvm 管理的独立环境
+3. **验证隔离效果**：
+   - `which node` → `~/.nvm/versions/node/v22.22.3/bin/node`
+   - `which codebuddy` → `~/.nvm/versions/node/v22.22.3/bin/codebuddy`
+   - `hermes --version` → v0.15.2（正常）
+   - `codebuddy --version` → 2.100.0（正常）
+
+**关键决策**：
+- 选择方案 A（两个 Node.js）而非方案 B（只改 prefix），实现完全隔离
+- Hermes 保留自己的 Node.js（`~/.hermes/node/`），用户使用 nvm 管理的 Node.js（`~/.nvm/`）
+
+**遗留问题 / 下轮开始点**：
+- 继续分析 khazix-skills 剩余 4 个 Skill
+- 完成 P3 待办：--dry-run 和 --since 参数
+- 探索 Playwright MCP 其他用途

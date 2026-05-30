@@ -202,3 +202,6 @@
 | | [ ] `openpyxl` 是否已在所有运行环境中安装 — 计划补充 `requirements.txt` 并验证 [来源:qianniu_business_analytics @2026-05-29] |  |
 | | [ ] 多店合并取数时（`shopIds` 含多个 id），`createAndDownload` 返回的 Excel 列结构是否与单店一致 — 计划通过实测验证 [来源:qianniu_business_analytics @2026-05-29] |  |
 | 107 | TAG:api-design | WARNING | `gh api --paginate --slurp` 返回嵌套数组 `[page1, page2, ...]`（每页一个子数组），而非展平的单层数组。调用方需手动展平，否则 `repos[0]` 取到的是第一页列表而非第一个仓库 [母库 @2026-05-29] | sync-knowledge.py |
+| 108 | TAG:build-env | WARNING | Hermes Agent 自带完整的 Node.js 环境（`~/.hermes/node/`），安装时会通过 `~/.zshrc` 和 `~/.local/bin/` 符号链接污染用户 PATH。必须手动清理或使用 nvm 隔离 [母库 @2026-05-30] | 环境配置 |
+| 109 | TAG:build-env | WARNING | 不要在 pipx 安装的 Python 包源码目录中执行 `git pull`，除非确认没有本地修改。Git 合并冲突会导致 SyntaxError，且可能产生 50+ 个冲突文件。优先使用 `pipx reinstall` 更新 [母库 @2026-05-30] | 工具链配置 |
+| 110 | TAG:build-env | INFO | nvm（Node Version Manager）是隔离 Node.js 环境的最佳方案。安装后每个项目的 Node.js 版本和全局包完全独立，互不干扰 [母库 @2026-05-30] | 环境配置 |

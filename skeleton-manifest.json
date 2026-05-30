@@ -50,9 +50,21 @@
         "source": "templates/lessons-learned.md",
         "action": "copy-template",
         "note": "保留骨架中的空表格，复制到项目根目录，发现可复用经验时追加"
+      },
+      {
+        "path": ".gitattributes",
+        "source": "templates/.gitattributes",
+        "action": "copy-as-is",
+        "note": "统一换行符(LF) + 标记二进制文件，从 templates/ 复制到项目根目录"
+      },
+      {
+        "path": "config/github-sync.json",
+        "source": "config/github-sync.json",
+        "action": "copy-and-fill",
+        "note": "跨项目知识同步配置（可选），从 config/ 复制到目标项目的 config/，按需填写 syncFrom"
       }
     ],
-    "rationale": "这些文件从项目第一天就需要存在。阶段一确认需求时就会有关键决策、可能遇到环境问题、可能发现可复用方法。没有它们，过程记录会丢失。"
+    "rationale": "这些文件从项目第一天就需要存在。阶段一确认需求时就会有关键决策、可能遇到环境问题、可能发现可复用方法。没有它们，过程记录会丢失。"}]}
   },
   "phases": [
     {

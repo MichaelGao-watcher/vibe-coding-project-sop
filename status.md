@@ -124,3 +124,5 @@ vibe-coding-project-sop/
 | 2026-05-29 | **sync-knowledge.py 改用 gh api**：删除 token 配置，API 调用全走 `gh api`（自动复用 gh 登录态），修复 Python 3.9 类型注解兼容性 |
 | 2026-05-29 | **统一经验索引**：新建 `build-experience-index.py`，生成 `experience-index.md`（241 条，覆盖 troubleshooting + lessons-learned + decisions）；新增 RULE-08：写代码前必须搜索可复用组件 |
 | 2026-05-30 | **工具调研 + CodeBuddy 修复**：安装 Reasonix v0.53.2、分析 khazix-skills、对比 Agent 本地记忆系统、修复 CodeBuddy 安装损坏（重装 v2.100.0） |
+| 2026-05-30 | **Node.js 环境隔离**：修复 hermes-agent 合并冲突（v0.14.0→v0.15.2）、安装 nvm + Node.js 22、清理 Hermes Node.js 泄漏、重新安装 CodeBuddy 到 nvm 管理的独立环境 |
+| 2026-05-30 | **完整性修复**：删除冗余 `build-troubleshooting-index.py` + `troubleshooting-index.md`（被 `experience-index.md` 替代）；`skeleton-manifest.json` 补充 `.gitattributes` + `config/github-sync.json`；`config/github-sync.json` 的 `branch` 设为占位字段（由运行时自动获取）；`templates/` 补齐 `TRIGGERS.md`；`opencode.json` Playwright 配置禁用（天猫已搁置） |
