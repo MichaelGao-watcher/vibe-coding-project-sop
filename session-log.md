@@ -424,3 +424,26 @@
 **遗留问题 / 下轮开始点**：
 - 探索 Playwright MCP 其他用途
 - 完成 P3 待办：--dry-run 和 --since 参数
+
+
+## 2026-05-29 第二轮
+
+**会话类型**：统一经验索引 + RULE-08 + 分发 4 个项目 + 确认流程统一
+
+**完成内容**：
+1. **统一经验索引**：新建 `scripts/build-experience-index.py`，生成 `experience-index.md`（241 条，覆盖 troubleshooting + lessons-learned + decisions）
+2. **RULE-08**：新增规则"写代码前必须搜索可复用组件"。根因：盲棋项目 coordinate.js 重复实现了 BoardRenderer 的全部功能
+3. **troubleshooting 新增条目**："AI 重复实现已有组件（棋盘/网格类 UI）"
+4. **lessons-learned #30 更新**：补充组件复用指引
+5. **分发 4 个项目**：blindfold-chess / french-exit / qianniu / the-watcher 全部分发 RULE-08 + 知识文件 + 索引
+6. **确认流程统一**：存档/聚合/分发三条指令全部改为 `y`/`n` 格式
+7. **新增 3.9 分发指令**：母库专用，触发词「分发」
+
+**关键决策**：
+- 统一索引优于双索引：AI 不会先判断"这是报错还是经验"，一个入口最自然
+- RULE-08 写入 AGENTS.md 是让 AI 在每次会话启动时读到
+
+**遗留问题 / 下轮开始点**：
+- starter/ 目录需同步更新（触发词、gh api 改动）
+- 探索 Playwright MCP 其他用途
+- 完成 P3 待办：--dry-run 和 --since 参数
