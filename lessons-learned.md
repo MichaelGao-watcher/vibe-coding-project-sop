@@ -205,3 +205,5 @@
 | 108 | TAG:build-env | WARNING | Hermes Agent 自带完整的 Node.js 环境（`~/.hermes/node/`），安装时会通过 `~/.zshrc` 和 `~/.local/bin/` 符号链接污染用户 PATH。必须手动清理或使用 nvm 隔离 [母库 @2026-05-30] | 环境配置 |
 | 109 | TAG:build-env | WARNING | 不要在 pipx 安装的 Python 包源码目录中执行 `git pull`，除非确认没有本地修改。Git 合并冲突会导致 SyntaxError，且可能产生 50+ 个冲突文件。优先使用 `pipx reinstall` 更新 [母库 @2026-05-30] | 工具链配置 |
 | 110 | TAG:build-env | INFO | nvm（Node Version Manager）是隔离 Node.js 环境的最佳方案。安装后每个项目的 Node.js 版本和全局包完全独立，互不干扰 [母库 @2026-05-30] | 环境配置 |
+| 111 | TAG:project-structure | INFO | 骨架母库的 `skeleton-manifest.json` 应始终与实际基础设施文件保持一致。新增或删除基础设施文件时，必须同步更新 manifest 的 `infrastructure.files` 数组，否则 `init-skeleton.py` 初始化的新项目会缺失文件。 [母库 @2026-05-30] | skeleton-manifest.json |
+| 112 | TAG:indexing | INFO | 同类功能的索引脚本应统一合并，避免冗余。`build-troubleshooting-index.py` 和 `build-experience-index.py` 功能重叠时，保留覆盖范围更广的脚本，删除被覆盖的脚本。 [母库 @2026-05-30] | scripts/ |

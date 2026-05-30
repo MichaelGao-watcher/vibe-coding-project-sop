@@ -477,7 +477,7 @@
 
 ---
 
-## 2026-05-30 第二轮
+## 2026-05-30（二） 第二轮
 
 **会话类型**：Hermes 修复 + Node.js 环境隔离
 
@@ -508,3 +508,22 @@
 - 继续分析 khazix-skills 剩余 4 个 Skill
 - 完成 P3 待办：--dry-run 和 --since 参数
 - 探索 Playwright MCP 其他用途
+
+---
+
+## 2026-05-30（二）
+
+**用户指令**：完整性审查 → 修复全部发现问题 → 存档
+
+**完成内容**：
+1. **完整性审查**：检查了骨架 manifest vs 实际文件、templates vs starter 对齐、脚本冗余、配置死字段
+2. **清理冗余索引脚本**：删除 `scripts/build-troubleshooting-index.py` 和 `troubleshooting-index.md`（已被 `build-experience-index.py` + `experience-index.md` 完全覆盖）
+3. **补齐 skeleton-manifest.json**：`infrastructure.files` 补充 `.gitattributes` 和 `config/github-sync.json`
+4. **修复死配置**：`config/github-sync.json` 的 `branch` 改为 `"auto"`（由运行时自动获取 default_branch）
+5. **对齐 starter/templates**：`templates/` 补齐 `TRIGGERS.md`
+6. **禁用死配置**：`opencode.json` Playwright MCP 设为 `enabled: false`
+7. **更新引用**：CLAUDE.md RULE-07 指向 `experience-index.md`；REASONIX.md 清理旧引用
+8. **生成 REASONIX.md**：新建母库的 Reasonix 工作指南
+
+**遗留问题 / 下轮开始点**：
+- 完成 P3 待办：--dry-run 和 --since 参数
