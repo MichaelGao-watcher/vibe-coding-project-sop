@@ -77,3 +77,4 @@
 | 2026-05-30 | **Node.js 环境隔离**：修复 hermes-agent 合并冲突（v0.14.0→v0.15.2）、安装 nvm + Node.js 22、清理 Hermes Node.js 泄漏、重新安装 CodeBuddy 到 nvm 管理的独立环境 |
 | 2026-05-30 | **完整性修复**：删除冗余 `build-troubleshooting-index.py` + `troubleshooting-index.md`（被 `experience-index.md` 替代）；`skeleton-manifest.json` 补充 `.gitattributes` + `config/github-sync.json`；`config/github-sync.json` 的 `branch` 设为占位字段（由运行时自动获取）；`templates/` 补齐 `TRIGGERS.md`；`opencode.json` Playwright 配置禁用（天猫已搁置） |
 | 2026-05-30 | **状态文档机制重构**：重构 status.md 待办机制（存档时先删除已打勾，再勾选本轮完成）、重构技术债务章节（表格化 + 已解决债务）、新增 RULE-09（技术债务解决后记录到 lessons-learned.md） |
+| 2026-05-31 | **分发逻辑重写 + 冗余清理**：`.backup/` 从 15 份精简到 3 份；`TRIGGERS.md` 移到根目录；新建 `scripts/distribute.py`（按条目合并替代覆盖）；更新 AGENTS.md 3.9；向 4 个下游项目分发成功 |

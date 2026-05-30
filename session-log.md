@@ -553,3 +553,23 @@
 **遗留问题 / 下轮开始点**：
 - 完成 P3 待办：--dry-run 和 --since 参数
 - 探索 Playwright MCP 其他用途
+
+
+## 2026-05-31
+
+**会话类型**：冗余评估 + 分发逻辑重写 + 多项目分发
+
+**完成内容**：
+1. **冗余评估**：发现 `.backup/` 15 份冗余备份、`CLAUDE.md` vs `AGENTS.md` 重叠 60%、`TRIGGERS.md` 位置偏僻等
+2. **精简备份**：`.backup/` 从 15 个旧备份精简到 3 个当前备份
+3. **TRIGGERS.md 归位**：移到根目录供用户快速查看，删了 `templates/` 和 `starter/` 中的副本
+4. **新建 `scripts/distribute.py`**：按条目合并（去重 + 来源标注），替代 `pull.py --force` 的覆盖式分发。复用 `sync-knowledge.py` 的解析和合并逻辑
+5. **更新 AGENTS.md 3.9**：分发指令引用 `distribute.py` 替代 `pull.py --force`
+6. **分发到 4 个下游项目**：blindfold-chess、french-exit、qianniu_business_analytics、the-watcher-publisher-v5.5，全部 Git commit + push 成功
+
+**关键决策**：
+- 分发逻辑从覆盖文件改为按条目合并（ADR-021）
+
+**遗留问题 / 下轮开始点**：
+- 完成 P3 待办：--dry-run 和 --since 参数
+- 探索 Playwright MCP 其他用途
